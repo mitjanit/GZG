@@ -8,5 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="core" level="project" />
+    <orderEntry type="library" name="controlP5" level="project" />
+    <orderEntry type="library" name="batikfont" level="project" />
+    <orderEntry type="library" name="SelectFile" level="project" />
   </component>
 </module>
