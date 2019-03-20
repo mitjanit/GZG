@@ -176,11 +176,11 @@ class SetOfPoints {
     }
 
     public void setXVariability(float minV, float maxV){
-        this.xVariability = new RangFloat(new Float(minV), new Float(maxV));
+        this.xVariability = new RangFloat(minV, maxV);
     }
 
     public void setYVariability(float minV, float maxV){
-        this.yVariability = new RangFloat(new Float(minV), new Float(maxV));
+        this.yVariability = new RangFloat(minV, maxV);
     }
 
     public void setMassParams(int mMA, RangFloat mInMA, RangFloat mOutMA, int mMR, RangFloat mInMR, RangFloat mOutMR, float r){

@@ -82,7 +82,7 @@ public class Oscillator {
     // Setters
 
     public void setOscRange(float minV, float maxV){
-        this.oscRange = new RangFloat(new Float(minV), new Float(maxV));
+        this.oscRange = new RangFloat(minV, maxV);
     }
 
     public void setOscMinValue(float minV){
