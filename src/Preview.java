@@ -910,10 +910,7 @@ public class Preview {
         switch(cw.cParticles.particleDist) {
             case 0: previewAreaOfParticles(pA, cw); break;
             case 1: previewGridOfParticles(pA, cw); break;
-            case 2:
-                println("FRAME OF PARTICLES");
-                break;
-
+            case 2: previewFrameOfParticles(pA, cw); break;
             case 3:
                 println("RING OF PARTICLES");
                 break;
@@ -952,14 +949,31 @@ public class Preview {
     public static void previewGridOfParticles(PApplet pA, ControlWindow cw){
         //println("PREVIEW GRID PARTICLES");
         pA.pushMatrix();
-            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
-            // Borders
-            previewRectBorder(pA, cw.cLine.corner1, cw.cLine.corner2, pA.color(255,0,0));
-            // Dots
-            previewGridDots(pA,cw.cLine.corner1, cw.cLine.corner2, cw.cGrid.numCols, cw.cGrid.numRows, 5);
+        //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
+        // Borders
+        previewRectBorder(pA, cw.cLine.corner1, cw.cLine.corner2, pA.color(255,0,0));
+        // Dots
+        previewGridDots(pA,cw.cLine.corner1, cw.cLine.corner2, cw.cGrid.numCols, cw.cGrid.numRows, 5);
         pA.popMatrix();
     }
 
+    // Preview FRAME of particles ******************************//
+    public static void previewFrameOfParticles(PApplet pA, ControlWindow cw){
+        //println("PREVIEW GRID PARTICLES");
+        pA.pushMatrix();
+        //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
+        // Borders
+        previewRectBorder(pA, cw.cLine.corner1 , cw.cLine.corner2, pA.color(0,0,0));
+        PVector c1 = new PVector(cw.cLine.corner1.x - cw.cParticles.frameWidth/2, cw.cLine.corner1.y - cw.cParticles.frameWidth/2);
+        PVector c2 = new PVector(cw.cLine.corner2.x + cw.cParticles.frameWidth/2, cw.cLine.corner2.y + cw.cParticles.frameWidth/2);
+        previewRectBorder(pA, c1 , c2, pA.color(0,255,0));
+        PVector c1i = new PVector(cw.cLine.corner1.x + cw.cParticles.frameWidth/2, cw.cLine.corner1.y + cw.cParticles.frameWidth/2);
+        PVector c2i = new PVector(cw.cLine.corner2.x - cw.cParticles.frameWidth/2, cw.cLine.corner2.y - cw.cParticles.frameWidth/2);
+        previewRectBorder(pA, c1i , c2i, pA.color(0,255,0));
+        // Dots
+        previewFrameGridDots(pA,c1, c2, c1i, c2i, cw.cGrid.numCols, cw.cGrid.numRows, 5);
+        pA.popMatrix();
+    }
 
     // Basic preview polygons
 
@@ -985,5 +999,19 @@ public class Preview {
             }
         pA.popStyle();
     }
+
+    public static void previewFrameGridDots(PApplet pA, PVector c1, PVector c2, PVector c1i, PVector c2i, float numCols, float numRows, float size){
+        pA.pushStyle();
+        pA.stroke(255,0,0);
+        float xStep = (c2.x - c1.x)/numCols;
+        float yStep = (c2.y - c1.y)/numRows;
+        for(float x = c1.x; x<= c2.x; x+=xStep){
+            for(float y = c1.y; y<= c2.y; y+=yStep){
+                pA.line(x, y-size, x, y +size); pA.line(x-size, y,x+size, y);
+            }
+        }
+        pA.popStyle();
+    }
+
 
 }
