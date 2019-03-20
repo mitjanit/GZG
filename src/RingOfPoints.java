@@ -1,0 +1,149 @@
+import processing.core.PVector;
+
+import static processing.core.PApplet.*;
+import static processing.core.PConstants.TWO_PI;
+
+public class RingOfPoints extends SetOfPoints {
+
+    PVector c;
+    RangFloat radiusMin, radiusMax, radiusStep, radiusVariability;
+    RangFloat angle, angleStep, randAngle;
+
+    public void setCenter(PVector a){
+        this.c = new PVector(a.x, a.y);
+    }
+
+    public void setRadiusMin(float r0, float r1){
+        this.radiusMin = new RangFloat(r0,r1);
+    }
+
+    public void setRadiusMax(float r0, float r1){
+        this.radiusMax = new RangFloat(r0,r1);
+    }
+
+    public void setRadiusVariability(RangFloat r){
+        this.radiusVariability = new RangFloat(r.getMinValue(), r.getMaxValue());
+    }
+
+    public void setRadiusStep(RangFloat r){
+        this.radiusStep = new RangFloat(r.getMinValue(), r.getMaxValue());
+    }
+
+    public void setAngle(float a0, float a1){
+        this.angle = new RangFloat(a0,a1);
+    }
+
+    public void setAngleStep(RangFloat a){
+        this.angleStep = new RangFloat(a.getMinValue(), a.getMaxValue());
+    }
+
+    public void setRandomAngle(RangFloat a){
+        this.randAngle = new RangFloat(a.getMinValue(), a.getMaxValue());
+    }
+
+
+    public RingOfPoints(int l, int n, PVector a, RangFloat rmin,RangFloat rmax, RangFloat rv, RangFloat rs, RangFloat ar, RangFloat as, RangFloat ra, RangFloat mar, RangFloat mrr, RangFloat sar, boolean e, boolean c, RangFloat npcr, float rar){
+        super();
+        this.c = new PVector(a.x, a.y);
+        this.radiusMin = new RangFloat(rmin.getMinValue(), rmin.getMaxValue());
+        this.radiusMax = new RangFloat(rmax.getMinValue(), rmax.getMaxValue());
+        this.radiusStep = new RangFloat(rs.getMinValue(), rs.getMaxValue());
+        this.radiusVariability = new RangFloat(rv.getMinValue(), rv.getMaxValue());
+        this.angle = new RangFloat(ar.getMinValue(), ar.getMaxValue());
+        this.angleStep = new RangFloat(as.getMinValue(), as.getMaxValue());
+        this.randAngle = new RangFloat(ra.getMinValue(), ra.getMaxValue());
+        setParams(l, n, mar, mrr, sar, e, c, npcr, rar, new RangFloat(0.0f), new RangFloat(0.0f));
+    }
+
+    public RingOfPoints(int l, int n, boolean e, PVector a, RangFloat rmin,RangFloat rmax, RangFloat rv, RangFloat rs, RangFloat ar, RangFloat as, RangFloat ra){
+        super(l, n, e);
+        this.c = new PVector(a.x, a.y);
+        this.radiusMin = new RangFloat(rmin.getMinValue(), rmin.getMaxValue());
+        this.radiusMax = new RangFloat(rmax.getMinValue(), rmax.getMaxValue());
+        this.radiusStep = new RangFloat(rs.getMinValue(), rs.getMaxValue());
+        this.radiusVariability = new RangFloat(rv.getMinValue(), rv.getMaxValue());
+        this.angle = new RangFloat(ar.getMinValue(), ar.getMaxValue());
+        this.angleStep = new RangFloat(as.getMinValue(), as.getMaxValue());
+        this.randAngle = new RangFloat(ra.getMinValue(), ra.getMaxValue());
+    }
+
+
+    public void setPoints(float minDistance, boolean fib){
+
+        if(fib){
+            // FIBONACCI
+            float r0 = max(0.1f, radiusMin.getMaxValue());
+            float r1 = max(0.1f,radiusMax.getMaxValue());
+            float a = 0.0f;
+            float aStep = angleStep.getMaxValue()/100;
+            int np=0;
+            for(float v=0.0f; v<1.0f; v+= aStep){
+                float r = map(sqrt(v),0,1,r0,r1);
+                a += TWO_PI*((sqrt(5)-1)/2);
+                float x = c.x + r*cos(a) + xVariability.getRandomValue();
+                float y = c.y + r*sin(a) + yVariability.getRandomValue();
+                PVector pos = new PVector(x, y);
+
+                float mAtt = getMassAttValue(pos, np);
+                float mRep = -getMassRepValue(pos, np);
+                float spin = getSpinAngleValue(pos, np);
+                float np2c = getNPCollapseValue(pos, np);
+
+                float mass = mAtt;
+                float nrand = Defaults.getRandom(0,100);
+                if(nrand>ratioAP){
+                    mass = mRep;
+                }
+
+
+                AttractorPoint ap = new AttractorPoint(pos, mass, spin, enabled, collapsable, np2c);
+                //println(ap);
+                this.points.add(ap);
+                np++;
+            }
+            deletePoints(minDistance);
+        }
+        else {
+            float rStep = radiusStep.getMaxValue();
+            float r0 = radiusMin.getRandomValue();
+            float r1 = radiusMax.getRandomValue();
+            int np=0;
+            for(float r = r0; r<r1; r+=rStep){
+
+                float a0 = angle.getMinValue();
+                float a1 = angle.getMaxValue();
+                float aStep = map(r, r0, r1, angleStep.getMaxValue(), angleStep.getMinValue());
+                rStep = map(r, r0, r1, radiusStep.getMaxValue(), radiusStep.getMinValue());
+                float ra = randAngle.getRandomValue();
+
+                for(float a = a0; a < a1; a += aStep){
+
+                    float rf = r + radiusVariability.getRandomValue();
+                    float x = c.x + rf*cos(a+ra) + xVariability.getRandomValue();
+                    float y = c.y + rf*sin(a+ra) + yVariability.getRandomValue();
+                    PVector pos = new PVector(x, y);
+
+                    float mAtt = getMassAttValue(pos, np);
+                    float mRep = -getMassRepValue(pos, np);
+                    float spin = getSpinAngleValue(pos, np);
+                    float np2c = getNPCollapseValue(pos, np);
+
+                    float mass = mAtt;
+                    float nrand = Defaults.getRandom(0,100);
+                    if(nrand>ratioAP){
+                        mass = mRep;
+                    }
+
+                    AttractorPoint ap = new AttractorPoint(pos, mass, spin, enabled, collapsable, np2c, new PVector(c.x, c.y), rf, a);
+                    this.points.add(ap);
+                    np++;
+                }
+            }
+            deletePoints(minDistance);
+        }
+    }
+
+
+
+
+}

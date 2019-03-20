@@ -1,7 +1,257 @@
+
+import processing.core.PApplet;
+import processing.core.PVector;
+
+import java.util.ArrayList;
+
 public class Main extends PApplet {
 
-    public static void main(String[] args) {
+    //****************** Control View Vars ***************//
+    boolean resetBackground = true;
+    boolean showPoints = true;
+    boolean divGravity = false;
 
-        System.out.println("Hello World!");
+    int redBG=255, greenBG=255, blueBG=255;
+    float fadeAmount = 255.0f;
+
+    //***************** Control Interaction Vars ***********//
+    PVector lastPoint = new PVector();
+    boolean createPointWithMousePressed = false;
+    boolean deletePointWithMousePressed = false;
+    boolean createParticleWithMousePressed = false;
+    boolean deleteParticleWithMousePressed = true;
+
+    //***************** Control Output Vars ***************//
+    boolean saveOneFrame = false;
+    boolean saveToPrint = false;
+    boolean saveVideoFrame = false;
+    boolean saveBigSize = false;
+    boolean bigExport = true;
+
+    //******************* Object and Constnats ***********//
+
+    public static ArrayList<Layer> layers;
+    ArrayList<AttractedParticleStyle> particleStyles;
+    ArrayList<SetOfPointsStyle> pointsStyles;
+
+    Layer currentLayer;
+    SetOfPointsStyle currentPointStyle;
+    AttractedParticleStyle currentParticleStyle;
+
+    ArrayList<BezierCurve> beziers = new ArrayList<BezierCurve>();
+    ArrayList<PVector> draggingPoints = new ArrayList<PVector>();
+
+    ControlWindow controls;
+
+
+    public static void main(String[] args) {
+        PApplet.main("Main", args);
     }
+
+    public void settings(){
+        size(Defaults.sceneWidth, Defaults.sceneHeight, P3D);
+        smooth(10);
+    }
+
+    public void setup(){
+
+        background(Defaults.bgColor);
+
+        controls = new ControlWindow("Controls Window.", 1400,1080);
+
+        //LAYERS creation
+        createLayers();
+        currentLayer = layers.get(0);
+
+        Layer l = layers.get(0);
+        SetOfPointsStyle style = new SetOfPointsStyle();
+        currentPointStyle = style;
+        /*l.createAreasOfPoints(1, 10, 0, style, new RangFloat(0, width), new RangFloat(0, height), false, false, false,
+                false, false, false, false, false, false, false, false);*/
+
+        /*l.createPolygonOfPoints(1, 10, 3, 10, style,
+                Defaults.Center, new RangFloat(300), new RangFloat(0),
+                new RangFloat(0), new RangFloat(0) , new RangFloat(0), new RangFloat(0),
+                false, false);*/
+
+        ArrayList<PVector> pts = new ArrayList<PVector>();
+        pts.add(new PVector(50,50));
+        pts.add(new PVector(400, 500));
+        pts.add(new PVector(700, 50));
+        /*l.createPolyLineOfPoints(1, 10, pts, 10, style,
+                                new RangFloat(0), new RangFloat(0),
+                                false, false);*/
+
+        /*l.createLinesOfPoints(1, 10, 10, new PVector(100,100), new PVector(600,400),
+                style, new RangFloat(0), new RangFloat(0), false, false);*/
+
+        /*l.createRingsOfPoints(1, 10, 10, Defaults.Center,
+                new RangFloat(100), new RangFloat(400), new RangFloat(0), new RangFloat(100),
+                new RangFloat (0, TWO_PI), new RangFloat(0.95f), new RangFloat(0),
+                false,
+                style,
+                new RangFloat(0), new RangFloat(0), new RangFloat(0),
+                false, false, false);*/
+
+        /*l.createGridsOfPoints(1, 10, Defaults.TopLeft, Defaults.BottomRight, 10, 15,
+        new RangFloat(0), new RangFloat(0), style, false, false);*/
+
+        /*l.createSpiralOfPoints(1, 1, Defaults.Center, 10, style, false, false,
+                new RangFloat(0), new RangFloat(400), new RangFloat(10), new RangFloat(0),
+                new RangFloat(0, 6*TWO_PI), new RangFloat(0.3f), new RangFloat(0),
+                new RangFloat(0), new RangFloat(0), new RangFloat(0), new RangFloat(0),
+                false, false);*/
+
+        /*l.createWavesOfPoints(1, 10, new PVector(0, height/2), new PVector(width, height/2), 10,
+        style, new RangFloat(100, 300), new RangFloat(15), false,
+        new RangFloat (0), new RangFloat(0.15f), new RangFloat(0),
+        new RangFloat(0), new RangFloat(0), new RangFloat(0),
+        false, false);*/
+
+        /*l.createWhitneyOfPoints(1, 10, Defaults.Center, 10,
+        21.5f, 120, 25,
+        style,
+        new RangFloat(0), new RangFloat(0),
+        false, false);*/
+
+        /*l.createFormulaOfPoints(1, 10, Defaults.Center, 10, style,
+                new RangFloat (1), new RangFloat (2),
+                new RangFloat(210.0f), new RangFloat(600.0f), new RangFloat(10.0f), new RangFloat(50.0f), new RangFloat(3),
+                new RangFloat(0), new RangFloat(0));*/
+
+        /*BezierCurve bc1 = new BezierCurve(new PVector(50,50), new PVector(400,50), new PVector(100,100), new PVector(300,300));
+        beziers.add(bc1);
+        BezierCurve bc2 = new BezierCurve(new PVector(400,50), new PVector(600,850), new PVector(300,300), new PVector(500,400));
+        beziers.add(bc2);
+        l.createBezierOfPoints(1, 10, 10, beziers, style,
+                new RangFloat(0), new RangFloat(0) , new RangFloat(0), true, true);*/
+
+        /*PoissonRect pr = new PoissonRect(10,10, Defaults.TopLeft, Defaults.BottomRight);
+        PoissonCircle pc = new PoissonCircle(10,10,Defaults.Center, 400, 0);
+        ArrayList<PVector> vertexs = new ArrayList<PVector>();
+        vertexs.add(new PVector(0,0)); vertexs.add(new PVector(400,400));
+        vertexs.add(new PVector(200, 800));
+        PoissonPolygon pp = new PoissonPolygon(10,10,vertexs);
+        l.createPoissonOfPoints(1, 0, 10,
+        style, pr, pc, pp, new RangFloat(0), new RangFloat(0),
+        false, false);*/
+
+        /*l.createTextsOfPoints(1, 100, 10,
+        Defaults.Center, "A", String fontFamily, 250,
+        float fontAlignX, float fontAlignY, float polyMode,
+        float numPolyMode, float polyLength, float polyStep, float polyAngle,
+        float adaptorScale, float adaptorOffset,
+        new RangFloat(0, TWO_PI), true,
+        style, new RangFloat(0), new RangFloat(0));*/
+
+        /*l.createImagesOfPoints(this, 1, 10,
+        Defaults.TopLeft, Defaults.BottomRight, 20, 30,
+        "foto.jpg", new RangFloat(0, 100), new RangFloat(0, 50), 50, true,
+        true, false, style, new RangFloat(0), new RangFloat(0));*/
+
+
+
+        AttractedParticleStyle pStyle = new AttractedParticleStyle();
+        pStyle.randomStyle();
+        currentParticleStyle = pStyle;
+        //l.createRandomParticles(this,50, 10, Defaults.TopLeft, Defaults.Center, pStyle);
+        //l.createLineOfParticles(this,100,10,Defaults.Center, Defaults.BottomRight, pStyle);
+        //l.createFrameOfParticles(this, new PVector(100,100), new PVector(width-100, height-100), 2, 5, 50,pStyle );
+        //l.createGridOfParticles(this,Defaults.TopLeft, Defaults.BottomRight, 10,5,pStyle);
+
+        //l.createRingOfParticles(this, Defaults.Center, new RangFloat(0), new RangFloat(400), new RangFloat(10), new RangFloat(20), new RangFloat(0, TWO_PI), new RangFloat(0.1f), new RangFloat(0), pStyle);
+
+        /*l.createPolygonOfParticles(this, Defaults.Center, 4, 10, 0,
+                                    new RangFloat(0), new RangFloat(400), new RangFloat(0),new RangFloat(100),
+                                    new RangFloat(0, TWO_PI), new RangFloat(0.1f),new RangFloat(0),pStyle);*/
+
+        /*l.createSpiralOfParticles(this,Defaults.Center,
+                                    new RangFloat(0),new RangFloat(600),new RangFloat(0),new RangFloat(5),
+                                    new RangFloat(0, 6*TWO_PI),new RangFloat(0.05f),new RangFloat(0),pStyle);*/
+
+        /*l.createWaveOfParticles(this,new PVector(0, height/2), new PVector(width, height/2),
+                                new RangFloat(100, 100),false, new RangFloat(5),
+                                new RangFloat(0, TWO_PI),new RangFloat(0.1f), pStyle);*/
+
+        //Scenarios.scenario05(this, layers);
+
+        // BIG IMAGE
+        Defaults.big = createGraphics((int)(width*Defaults.BIG_SCALE),(int)(height*Defaults.BIG_SCALE));
+        Defaults.big.beginDraw();
+        Defaults.big.background(255);
+
+
+    }
+
+    public void draw(){
+        //translate(Defaults.screenWidth/2, Defaults.screenHeight/2,0);
+        //background(255);
+
+        if (saveToPrint) { beginRecord(PDF, Defaults.pathDATA+"/pdf/"+Defaults.timestamp()+".pdf");}
+
+        if(Defaults.resetBackground) {
+            background(redBG, greenBG, blueBG, fadeAmount);
+            //Defaults.big.background(redBG, greenBG, blueBG, fadeAmount);
+            Defaults.resetBackground = false;
+        }
+
+        updateLayers(this);
+
+        if(controls.cCommons.preview){
+            Preview.previewAll(this, controls);
+        }
+
+    }
+
+    public void mousePressed(){
+
+        println("MOUSE PRESSED");
+
+        if((createPointWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>Defaults.minDistance)){
+            currentLayer.createPointOnMouse(this, currentPointStyle);
+        }
+        else if(deletePointWithMousePressed){
+            currentLayer.deletePointOn(new PVector(mouseX, mouseY), 1.0f);
+        }
+        else if((createParticleWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>Defaults.minDistance)){
+            currentLayer.createParticleOnMouse(this, currentParticleStyle);
+        }
+        else if(deleteParticleWithMousePressed){
+            currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
+        }/*
+        else if(addVertexOnClick){
+            createVertexOnMouse();
+        }
+        else if(addBezierOnClick){
+            addBezier();
+        }
+        else if(addPolyPointOnClick){
+            addPolyLinePoint();
+        }*/
+
+        lastPoint = new PVector(mouseX, mouseY);
+    }
+
+    public void mouseDragged(){
+
+        //currentLayer.createParticleOnMouse(this, currentParticleStyle);
+        currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
+    }
+
+
+    void createLayers(){
+        layers = new ArrayList<Layer>();
+        for(int i=Defaults.MIN_LAYER; i<=Defaults.MAX_LAYER; i++){
+            layers.add(new Layer(i));
+        }
+    }
+
+    void updateLayers(PApplet pA){
+        for(Layer layer: layers){
+            layer.update(pA);
+        }
+    }
+
+
+
 }
