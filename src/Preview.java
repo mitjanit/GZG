@@ -27,13 +27,7 @@ public class Preview {
             case "whitney": previewWhitneyOfPoints(pA, cw); break;
             case "text": previewTextOfPoints(pA, cw); break;
             case "poisson": previewPoissonOfPoints(pA, cw); break;
-            /*
-
-
-
-            case "particles": //println("PREVIEW PARTICLES.");
-                previewParticles();
-                break;*/
+            case "particles": previewParticles(pA, cw); break;
         }
     }
 
@@ -793,12 +787,12 @@ public class Preview {
             PVector c1 = new PVector(cw.cLine.corner1.x + t*dx.getMaxValue(), cw.cLine.corner1.y + t*dy.getMaxValue());
             PVector c2 = new PVector(cw.cLine.corner2.x + t*dx.getMaxValue(), cw.cLine.corner2.y + t*dy.getMaxValue());
             PVector c = new PVector(cw.cCircle.centre.x + t*dx.getMaxValue(), cw.cCircle.centre.y + t*dy.getMaxValue());
-            /*
+
             switch(cw.cPoisson.poissonOption) {
                 case 0: //println("PREVIEW POISSON RECT OF POINTS.");
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.pr!=null)) {
                         cw.cPoisson.pr.animatePoisson(25);
-                        cw.cPoisson.pr.drawPoisson();
+                        cw.cPoisson.pr.drawPoisson(pA);
                     } else {
                         displayArea(pA,c1, c2);
 
@@ -823,9 +817,9 @@ public class Preview {
                 case 1: //println("PREVIEW POISSON CIRCLE OF POINTS.");
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.pc!=null)) {
                         cw.cPoisson.pc.animatePoisson(25);
-                        cw.cPoisson.pc.drawPoisson();
+                        cw.cPoisson.pc.drawPoisson(pA);
                     } else {
-                        displayCircle(c, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue());
+                        displayCircle(pA, c, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue());
                         if (cw.cRepeat.symmetryX && t>0) {
                             PVector cs = new PVector(cw.cCircle.centre.x - t*dx.getMaxValue(), cw.cCircle.centre.y + t*dy.getMaxValue());
                             displayCircle(pA,cs, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue(), pA.color(255, 0, 0));
@@ -844,7 +838,7 @@ public class Preview {
                 case 2: //println("PREVIEW POISSON POLYGON OF POINTS.");
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.closePolygon)&&(cw.cPoisson.pp!=null)) {
                         cw.cPoisson.pp.animatePoisson(25);
-                        cw.cPoisson.pp.drawPoisson();
+                        cw.cPoisson.pp.drawPoisson(pA);
                     } else {
                         displayPolygon(pA, cw, t*dx.getMaxValue(), t*dy.getMaxValue());
                         if (cw.cRepeat.symmetryX && t>0) {
@@ -859,13 +853,37 @@ public class Preview {
                     }
                     break;
 
-            }*/
+            }
         }
     }
 
+    public static void displayCircle(PApplet pA, PVector centre, float rMin, float rMax) {
+        pA.pushMatrix();
+            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+            pA.stroke(0);
+            pA.strokeWeight(1);
+            pA.noFill();
+            pA.ellipse(centre.x, centre.y, 2*rMin, 2*rMin);
+            pA.ellipse(centre.x, centre.y, 2*rMax, 2*rMax);
+        pA.popMatrix();
+    }
+
+    public static void displayCircle(PApplet pA, PVector centre, float rMin, float rMax, int c) {
+        pA.pushMatrix();
+            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+            pA.stroke(c);
+            pA.strokeWeight(1);
+            pA.noFill();
+            pA.ellipse(centre.x, centre.y, 2*rMin, 2*rMin);
+            pA.ellipse(centre.x, centre.y, 2*rMax, 2*rMax);
+        pA.popMatrix();
+    }
+
     public  static void displayPolygon(PApplet pA, ControlWindow cw, float ddx, float ddy) {
-        /*
-        for (int i=0; i<cw.XXXXXXXXXXXX.corners.size(); i++) {
+
+        ArrayList<PVector> corners = cw.cPoisson.corners;
+
+        for (int i=0; i<corners.size(); i++) {
             pA.fill(0);
             pA.noStroke();
             PVector v0 = corners.get(i);
@@ -877,17 +895,95 @@ public class Preview {
                 pA.strokeWeight(1);
                 pA.line(v0.x + ddx, v0.y + ddy, v1.x + ddx, v1.y + ddy);
                 if ((corners.size()>2)&&(i==corners.size()-1)) {
-                    if (closePolygon) stroke(0);
+                    if (cw.cPoisson.closePolygon) pA.stroke(0);
                     else pA.stroke(255, 0, 0);
                     pA.line(v0.x + ddx, v0.y + ddy, corners.get(0).x + ddx, corners.get(0).y + ddy);
                 }
             pA.popMatrix();
         }
-        */
+
     }
 
     // Preview PARTICLES ********************************************//
 
+    public  static void previewParticles(PApplet pA, ControlWindow cw){
+        switch(cw.cParticles.particleDist) {
+            case 0: previewAreaOfParticles(pA, cw); break;
+            case 1: previewGridOfParticles(pA, cw); break;
+            case 2:
+                println("FRAME OF PARTICLES");
+                break;
 
+            case 3:
+                println("RING OF PARTICLES");
+                break;
+
+            case 4:
+                println("LINE OF PARTICLES");
+                break;
+
+            case 5:
+                println("POLYGON OF PARTICLES");
+                break;
+
+            case 6:
+                println("SPIRAL OF PARTICLES");
+                break;
+
+            case 7:
+                println("WAVE OF PARTICLES");
+                break;
+        }
+    }
+
+    // PREVIEW PARTICLES **********************************************************************//
+
+    // Preview AREA of Particles ******************************//
+    public static void previewAreaOfParticles(PApplet pA, ControlWindow cw){
+        //println("PREVIEW AREA OF PARTICLES");
+        pA.pushMatrix();
+        //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
+        // Borders
+        previewRectBorder(pA, cw.cLine.corner1, cw.cLine.corner2, pA.color(255,0,0));
+        pA.popMatrix();
+    }
+
+    // Preview GRID of particles ******************************//
+    public static void previewGridOfParticles(PApplet pA, ControlWindow cw){
+        //println("PREVIEW GRID PARTICLES");
+        pA.pushMatrix();
+            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
+            // Borders
+            previewRectBorder(pA, cw.cLine.corner1, cw.cLine.corner2, pA.color(255,0,0));
+            // Dots
+            previewGridDots(pA,cw.cLine.corner1, cw.cLine.corner2, cw.cGrid.numCols, cw.cGrid.numRows, 5);
+        pA.popMatrix();
+    }
+
+
+    // Basic preview polygons
+
+    public static void previewRectBorder(PApplet pA, PVector c1, PVector c2, int color ){
+        pA.pushStyle();
+            pA.stroke(color);
+            pA.line(c1.x, c1.y, c2.x, c1.y);
+            pA.line(c1.x, c1.y, c1.x, c2.y);
+            pA.line(c2.x, c1.y, c2.x, c2.y);
+            pA.line(c1.x, c2.y, c2.x, c2.y);
+        pA.popStyle();
+    }
+
+    public static void previewGridDots(PApplet pA, PVector c1, PVector c2, float numCols, float numRows, float size){
+        pA.pushStyle();
+            pA.stroke(255,0,0);
+            float xStep = (c2.x - c1.x)/numCols;
+            float yStep = (c2.y - c1.y)/numRows;
+            for(float x = c1.x; x<= c2.x; x+=xStep){
+                for(float y = c1.y; y<= c2.y; y+=yStep){
+                    pA.line(x, y-size, x, y +size); pA.line(x-size, y,x+size, y);
+                }
+            }
+        pA.popStyle();
+    }
 
 }
