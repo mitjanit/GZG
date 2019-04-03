@@ -540,11 +540,17 @@ public class ControlDefaults {
             blueBG = sBlueBG.getValue();
             println("BLUE BG : "+blueBG);
         }
+        // BLEND MODE
+        else if(theControlEvent.isFrom("BLEND MODE")) {
+            blendM = (int)slBlendMode.getValue();
+            println("BLEND MODE: "+blendM+" "+blendOptions.get(blendM));
+        }
         else if(theControlEvent.isFrom("FADE")) {
             if(fadeEffect) bFade.setLabel("FADE");
             else bFade.setLabel("NO FADE");
             println("FADE EFFECT: "+fadeEffect);
         }
+
         else if(theControlEvent.isFrom("FADE IN")) {
             if(fadeIn) bFadeIn.setLabel("FADE IN");
             else bFadeIn.setLabel("NO FADE IN");

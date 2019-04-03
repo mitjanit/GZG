@@ -193,5 +193,15 @@ public class ControlRandom {
             else bShuffle.setLabel("NO SHUFFLE");
             println("SHUFFLE: "+shuffle);
         }
+        // X RANGE
+        else if(theControlEvent.isFrom("X")) {
+            xRange.setValues(rX.getLowValue(), rX.getHighValue());
+            println("X RANGE: "+xRange);
+        }
+        // Y RANGE
+        else if(theControlEvent.isFrom("Y")) {
+            yRange.setValues(rY.getLowValue(),rY.getHighValue());
+            println("Y RANGE: "+yRange);
+        }
     }
 }

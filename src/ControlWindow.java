@@ -485,8 +485,8 @@ public class ControlWindow extends PApplet {
         int nTimes = cRepeat.numTimes;
         int nPoints = cCommons.numPoints;
         float minD = cCircle.minDistance;
-        PVector c1 = cLine.corner1.copy();
-        PVector c2 = cLine.corner2.copy();
+        RangFloat xr = cRandom.xRange.copy();
+        RangFloat yr = cRandom.yRange.copy();
         RangFloat dx = cRepeat.displaceX.copy();
         RangFloat dy = cRepeat.displaceY.copy();
         boolean symX = cRepeat.symmetryX;
@@ -502,7 +502,7 @@ public class ControlWindow extends PApplet {
         boolean randomize = cRandom.randomize;
         boolean invert = cRandom.invert;
         println("CREATE AREA OF POINTS ON LAYER " + l.id + ".");
-        l.createAreasOfPoints(nTimes, nPoints, minD, style, dx, dy, cloneArea, symX, symY, mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+        l.createAreasOfPoints(nTimes, nPoints, minD, style, xr, yr, dx, dy, cloneArea, symX, symY, mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
     }
 
     public void createPolygonOfPoints(Layer l) {

@@ -331,17 +331,6 @@ public class ControlCommon {
             println("Num.Points : "+numPoints);
         }
 
-        // X RANGE
-        /*
-        else if(theControlEvent.isFrom("X")) {
-            xRange.setValues(rX.getLowValue(), rX.getHighValue());
-            println("X RANGE: "+xRange);
-        }
-        // Y RANGE
-        else if(theControlEvent.isFrom("Y")) {
-            yRange.setValues(rY.getLowValue(),rY.getHighValue());
-            println("Y RANGE: "+yRange);
-        }*/
         // MASS ATTRACTORS RANGE IN
         else if(theControlEvent.isFrom("MASS ATT IN")) {
             mapInMassAtt.setValues(rMapMassAttIn.getLowValue(), rMapMassAttIn.getHighValue());

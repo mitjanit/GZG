@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import javax.naming.ldap.Control;
 import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
@@ -252,7 +253,7 @@ public class AttractedParticle {
     }
 
 
-    public void move(ArrayList<AttractorPoint> attractors, float frameCount){
+    public void move(ControlWindow controls, ArrayList<AttractorPoint> attractors, float frameCount){
         if(canStart(frameCount)){
 
             PVector target = new PVector();
@@ -280,10 +281,10 @@ public class AttractedParticle {
                     PVector  vi = ap.position.copy();
                     vi.sub(this.position);
                     vi.normalize();
-                    if(Defaults.divGravity){ vi.mult(ap.gravity/(float)disti);
+                    if(controls.cDefaults.divGravity){ vi.mult(ap.gravity/disti);
                     } else { vi.mult(ap.gravity); }
                     target.add(vi);
-                    if(Defaults.divSpinAngle){ target.rotate(ap.spinAngle/disti);}
+                    if(controls.cDefaults.divSpinAngle){ target.rotate(ap.spinAngle/disti);}
                     else { target.rotate(ap.spinAngle); }
 
                 }
@@ -323,13 +324,12 @@ public class AttractedParticle {
 
             float xr = xR.getRandomValue();
             float yr = yR.getRandomValue();
-            float zr = 0; //Defaults.getRandom(0,0);
 
             pA.noStroke();
             pA.fill(pRed,pGreen,pBlue,pOpac);
             pA.pushMatrix();
-                //pA.translate(-Defaults.sceneWidth/2, -Defaults.sceneHeight/2,0);
-                pA.translate(position.x + xr, position.y + yr, 0 + zr);
+                //pA.translate(-Defaults.sceneWidth/2, -Defaults.sceneHeight/2);
+                pA.translate(position.x + xr, position.y + yr);
 
                 if(fadeInSize>=1 && pAge<fadeInSize){
                         float tp = min(pAge, fadeInSize)/fadeInSize;

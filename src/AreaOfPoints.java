@@ -43,6 +43,7 @@ class AreaOfPoints extends SetOfPoints {
 
         float numAtts = numPoints*ratioAP/100.0f;
         println("numATTS: "+numAtts+", numREPS: "+(numPoints-numAtts));
+        println("AREA: ["+p1.x+","+p1.y+"] to ["+p2.x+","+p2.y+"].");
 
         for (int i = 0; i < numPoints; i++) {
             AttractorPoint aptemp;
@@ -66,49 +67,23 @@ class AreaOfPoints extends SetOfPoints {
             points.add(ap.copy());
 
             float d = dist(pos.x, pos.y, Defaults.sceneWidth/2, Defaults.sceneHeight/2);
-            float dx = (Defaults.sceneWidth/2 - pos.x); float dy = (Defaults.sceneHeight/2 - pos.y);
+            float dx = (Defaults.sceneWidth/2 - pos.x);
+            float dy = (Defaults.sceneHeight/2 - pos.y);
+            println("DY:"+dy);
+            println(Defaults.screenHeight);
             float a = atan(dy/dx) + PI;
 
             if(mirrorX || mirrorY){
                 if((mirrorX && abs(dx)>minDistance) || (mirrorY && abs(dy)>minDistance)){
-                    float x = (mirrorX)?(Defaults.sceneWidth/2 + dx):pos.x;
-                    float y = (mirrorY)?(Defaults.sceneWidth/2 + dy):pos.y;
-                    pos = new PVector(x, y);
-                    float massN = massAttRangeOut.getRandomValue();;
-                    if(clone){
-                        massN = mass;
-                    }
-                    else if(invert){
-                        massN = -mass;
-                    }
-                    else if((randomize)&&(Defaults.getRandom(0,100)>ratioAP)){
-                        massN = -massRepRangeOut.getRandomValue();
-                    }
-                    AttractorPoint ap2 = new AttractorPoint(pos, massN, spin, enabled, collapsable, np2c);
-                    points.add(ap2);println("SIMMETRY:"+ap);
+                    AttractorPoint ap2 = getMirrorPoint(pos, mirrorX, mirrorY, dx, dy, mass, spin, np2c, enabled, collapsable, clone, invert, randomize);
+                    points.add(ap2);println("SIMMETRY:"+ap2);
                 }
             }
             else if(quadSim){
                 if(dx<0 ){ a+=PI;}
                 for(int q=0; q<3; q++){
                     a+=HALF_PI;
-                    float x = Defaults.sceneWidth/2 + d*cos(a);
-                    float y = Defaults.sceneHeight/2 + d*sin(a);
-                    pos = new PVector(x, y);
-                    float massN = massAttRangeOut.getRandomValue();
-                    if(clone){
-                        massN = mass;
-                    }
-                    else if(invert){
-                        massN = -mass;
-                    }
-                    else if((randomize)&&(Defaults.getRandom(0,100)>ratioAP)){
-                        massN = -massRepRangeOut.getRandomValue();
-                    }
-                    else if(shuffle){
-                        massN=(q%2==0)?-mass:mass;
-                    }
-                    AttractorPoint ap2 = new AttractorPoint(pos, massN, spin, enabled, collapsable, np2c);
+                    AttractorPoint ap2 = getSimmetryPoint( q,  d,  a,  mass,  spin,  np2c,  enabled,  collapsable,  clone,  invert,  randomize,  shuffle);
                     points.add(ap2);println("QUAD:"+ap2);
                 }
             }
@@ -116,28 +91,49 @@ class AreaOfPoints extends SetOfPoints {
                 if(dx<0 ){ a+=PI;}
                 for(int q=0; q<5; q++){
                     a+=PI/3;
-                    float x = Defaults.sceneWidth/2 + d*cos(a);
-                    float y = Defaults.sceneHeight/2 + d*sin(a);
-                    pos = new PVector(x, y);
-                    float massN = massAttRangeOut.getRandomValue();
-                    if(clone){
-                        massN = mass;
-                    }
-                    else if(invert){
-                        massN = -mass;
-                    }
-                    else if((randomize)&&(Defaults.getRandom(0,100)>ratioAP)){
-                        massN = -massRepRangeOut.getRandomValue();
-                    }
-                    else if(shuffle){
-                        massN=(q%2==0)?-mass:mass;
-                    }
-                    AttractorPoint ap2 = new AttractorPoint(pos, massN, spin, enabled, collapsable, np2c);
+                    AttractorPoint ap2 = getSimmetryPoint( q,  d,  a,  mass,  spin,  np2c,  enabled,  collapsable,  clone,  invert,  randomize,  shuffle);
                     points.add(ap2);println("HEXA:"+ap2);
                 }
             }
         }
         deletePoints(minDistance);
+    }
+
+    public AttractorPoint getMirrorPoint(PVector pos, boolean mirrorX, boolean mirrorY, float dx, float dy, float mass, float spin, float np2c, boolean enabled, boolean collapsable, boolean clone, boolean invert, boolean randomize){
+        float newX = (mirrorX)?(Defaults.sceneWidth/2 + dx):pos.x;
+        float newY = (mirrorY)?(Defaults.sceneHeight/2 + dy):pos.y;
+        PVector newPos = new PVector(newX, newY);
+        float massN = massAttRangeOut.getRandomValue();;
+        if(clone){
+            massN = mass;
+        }
+        else if(invert){
+            massN = -mass;
+        }
+        else if((randomize)&&(Defaults.getRandom(0,100)>ratioAP)){
+            massN = -massRepRangeOut.getRandomValue();
+        }
+        return new AttractorPoint(newPos, massN, spin, enabled, collapsable, np2c);
+    }
+
+    public AttractorPoint getSimmetryPoint(int q, float d, float a, float mass, float spin, float np2c, boolean enabled, boolean collapsable, boolean clone, boolean invert, boolean randomize, boolean shuffle){
+        float x = Defaults.sceneWidth/2 + d*cos(a);
+        float y = Defaults.sceneHeight/2 + d*sin(a);
+        PVector newPos = new PVector(x, y);
+        float massN = massAttRangeOut.getRandomValue();
+        if(clone){
+            massN = mass;
+        }
+        else if(invert){
+            massN = -mass;
+        }
+        else if((randomize)&&(Defaults.getRandom(0,100)>ratioAP)){
+            massN = -massRepRangeOut.getRandomValue();
+        }
+        else if(shuffle){
+            massN=(q%2==0)?-mass:mass;
+        }
+        return new AttractorPoint(newPos, massN, spin, enabled, collapsable, np2c);
     }
 
     AreaOfPoints copy(){

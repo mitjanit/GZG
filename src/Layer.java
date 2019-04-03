@@ -5,15 +5,18 @@ import java.util.ArrayList;
 
 public class Layer {
 
+    // ID layer
     int id;
 
-    //
+    // Collections of sets & attractor points.
     ArrayList<AttractorPoint> lPoints;
     ArrayList<SetOfPoints> lSets;
 
+    // Collection of sources & particles.
     ArrayList<AttractedParticle> lParticles;
     ArrayList<SourceOfParticles> lSources;
 
+    // Collection of points created with mouse.
     SetOfPoints mousePoints;
 
     public Layer(int n){
@@ -28,7 +31,6 @@ public class Layer {
         lSets.add(mousePoints);
     }
 
-
     void update(PApplet pA, ControlWindow cw){
         for(int ns=0; ns<lSets.size(); ns++){
             SetOfPoints set = lSets.get(ns);
@@ -41,7 +43,7 @@ public class Layer {
             for(int np=0; np<lParticles.size(); np++) {
                 AttractedParticle part = lParticles.get(np);
                 if(part!=null && part.isAlive(pA.frameCount)){
-                    part.move(lPoints, pA.frameCount);
+                    part.move(cw, lPoints, pA.frameCount);
                     if(cw.cDefaults.displayParticles){ part.display(pA); }
                     if(part.isGoal()){ lParticles.remove(np); }
                 }
@@ -108,7 +110,7 @@ public class Layer {
 
     void printLayerSets(){
         for(SetOfPoints set: lSets){
-            //set.printSet();
+            set.printSet();
         }
     }
 
@@ -184,6 +186,14 @@ public class Layer {
         PVector pos = new PVector(pA.mouseX, pA.mouseY);
         AttractedParticle p = new AttractedParticle(pos, pA.frameCount);
         p.setParamsFromStyle(style);
+        this.lParticles.add(p);
+    }
+
+    void createParticleOnMouse(PApplet pA, ControlWindow controls){
+        PVector pos = new PVector(pA.mouseX, pA.mouseY);
+        AttractedParticle p = new AttractedParticle(pos, pA.frameCount);
+        AttractedParticleStyle style = controls.createAttractedParticleStyleFromGUI();
+        p.setParamsFromStyle(style);  // Falla estil o es transparent
         this.lParticles.add(p);
     }
 
@@ -283,6 +293,7 @@ public class Layer {
     }
 
 
+
     // POINTS CREATION
 
     void createPointOnMouse(PApplet pA, SetOfPointsStyle style){
@@ -299,15 +310,31 @@ public class Layer {
         lPoints.add(ap);
     }
 
+    void createPointOnMouse(PApplet pA, ControlWindow controls){
+        PVector pos = new PVector(pA.mouseX, pA.mouseY);
+        float g = controls.cCommons.massAtt.getRandomValue();
+        if(Defaults.getRandom(100)>controls.cCommons.ratioAttRep){
+            g = - controls.cCommons.massRep.getRandomValue();
+        }
+        float spin = controls.cCommons.spinAng.getRandomValue();
+        float np2c = controls.cCommons.np2Col.getRandomValue();
+        boolean enablePoint = controls.cCommons.enable;
+        boolean collapseable = controls.cCommons.collapseable;
+        AttractorPoint ap = new AttractorPoint(pos, g, spin, enablePoint, collapseable, np2c);
+
+        mousePoints.points.add(ap);
+        lPoints.add(ap);
+    }
+
     //AREAS
     void createAreasOfPoints(int numTimes, int numPoints, float minDistance, SetOfPointsStyle style,
-                             RangFloat dx, RangFloat dy,
+                             RangFloat xR, RangFloat yR,RangFloat dx, RangFloat dy,
                              boolean cloneArea, boolean symmetryX, boolean symmetryY,
                              boolean mirrorX, boolean mirrorY, boolean quadSim, boolean hexaSim, boolean clone, boolean shuffle, boolean randomize, boolean invert){
 
         if(cloneArea){
             // Original
-            AreaOfPoints aop = new AreaOfPoints(this.id,numPoints, style.enable, style.xRange, style.yRange);
+            AreaOfPoints aop = new AreaOfPoints(this.id,numPoints, style.enable, xR, yR);
             aop.setParamsFromStyle(style);
             aop.setPoints(minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
             //aop.setOscillators( );

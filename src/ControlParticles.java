@@ -12,16 +12,14 @@ public class ControlParticles {
 
     static List mapOptions = Arrays.asList("NONE", "DISTANCE", "DISTANCE INV", "AGE", "AGE INV", "ORIENTATION X", "ORIENTATION X INV", "ORIENTATION Y", "ORIENTATION Y INV", "POSITION X", "POSITION X INV", "POSITION Y", "POSITION Y INV", "DISTANCE REF", "DISTANCE REF INV");
     static List distOptions = Arrays.asList("RANDOM", "FILL RECT", "BORDER RECT", "FILL CIRCLE", "LINE", "POLYGON", "SPIRAL", "WAVE");
-    static List blendOptions = Arrays.asList("BLEND", "ADD", "SUBTRACT", "DARKEST", "LIGHTEST", "DIFFERENCE", "EXCLUSION", "MULTIPLY", "SCREEN", "REPLACE");
 
-    ScrollableList slParticleDist, slMapRed, slMapGreen, slMapBlue, slMapOpac, slMapWidth, slMapHeight, slParticleStyle, slBlendMode;
+    ScrollableList slParticleDist, slMapRed, slMapGreen, slMapBlue, slMapOpac, slMapWidth, slMapHeight, slParticleStyle;
     int particleDist, mapRed, mapGreen, mapBlue, mapOpac, mapWidth, mapHeight;
     Range rParticleStep, rParticleDelay, rFadeInSize, rRedIn, rRedOut, rGreenIn, rGreenOut, rBlueIn, rBlueOut, rOpacIn, rOpacOut, rWidthIn, rWidthOut, rHeightIn, rHeightOut;
     RangFloat particleStep, particleDelay, fadeInSize, redIn, redOut, greenIn, greenOut, blueIn, blueOut, opacIn, opacOut, widthIn, widthOut,heightIn, heightOut;
     Button bParticleMode, bGreyscale, bEqualWidthAndHeight, bLoadStyle, bRandStyle, bSaveStyle, bExportStyles, bImportStyles;
 
     int particleStyle; // random, painters, removers
-    int blendM;
     boolean greyScale, equalWidthAndHeight;
     Slider2D s2dRefColor;
     PVector  refColor;
@@ -872,11 +870,6 @@ public class ControlParticles {
                         .setRangeValues(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN).setBroadcast(true);
                 heightIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
             }
-        }
-        // BLEND MODE
-        else if(theControlEvent.isFrom("BLEND MODE")) {
-            blendM = (int)slBlendMode.getValue();
-            println("BLEND MODE: "+blendM+" "+blendOptions.get(blendM));
         }
         // PARTICLE STYLE
         else if(theControlEvent.isFrom("PARTICLE STYLE")) {

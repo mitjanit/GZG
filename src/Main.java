@@ -80,8 +80,30 @@ public class Main extends PApplet {
     }
 
     public void draw(){
-        //translate(Defaults.screenWidth/2, Defaults.screenHeight/2,0);
-        //background(255);
+
+        switch(controls.cDefaults.blendOptions.get(controls.cDefaults.blendM).toString()){
+            case "ADD": blendMode(ADD); break;
+            case "SUBTRACT": blendMode(SUBTRACT); break;
+            case "DARKEST": blendMode(DARKEST); break;
+            case "LIGHTEST": blendMode(LIGHTEST); break;
+            case "DIFFERENCE": blendMode(DIFFERENCE); break;
+            case "EXCLUSION": blendMode(EXCLUSION); break;
+            case "MULTIPLY": blendMode(MULTIPLY); break;
+            case "SCREEN": blendMode(SCREEN); break;
+            case "REPLACE": blendMode(REPLACE); break;
+            default: blendMode(BLEND); break;
+        }
+
+        if(controls.cDefaults.fadeEffect  || controls.cDefaults.liveColor){
+            pushStyle();
+                fill(controls.cDefaults.redBG, controls.cDefaults.greenBG, controls.cDefaults.blueBG,controls.cDefaults.fadeAmount);
+                noStroke();
+                pushMatrix();
+                    translate(-Defaults.sceneWidth/2, -Defaults.sceneHeight/2,0);
+                    rect(0,0,Defaults.sceneWidth, Defaults.sceneHeight);
+                popMatrix();
+            popStyle();
+        }
 
         if (controls.cDefaults.saveToPrint && !isRecordingPDF) {
             println("saving to pdf – creating file ...");
@@ -108,8 +130,13 @@ public class Main extends PApplet {
             println("saving to pdf – done");
             isRecordingPDF = false;
         }
-        if (controls.cDefaults.saveOneFrame) { saveFrame("output/frame/"+folderName+"/"+prefixFile+Defaults.timestamp()+".tiff"); controls.cDefaults.saveOneFrame=false;}
-        if (controls.cDefaults.saveVideoFrame) { saveFrame("output/video/"+folderName+"/"+prefixFile+"####.tiff"); }
+        if (controls.cDefaults.saveOneFrame) {
+            saveFrame("output/frame/"+folderName+"/"+prefixFile+Defaults.timestamp()+".tiff");
+            controls.cDefaults.saveOneFrame=false;
+        }
+        if (controls.cDefaults.saveVideoFrame) {
+            saveFrame("output/video/"+folderName+"/"+prefixFile+"####.tiff");
+        }
         if (controls.cDefaults.saveBigSize) {
             Defaults.big.endDraw();
             Defaults.big.save("output/big/"+folderName+"/"+prefixFile+Defaults.timestamp()+".tiff");
@@ -128,17 +155,21 @@ public class Main extends PApplet {
 
         println("MOUSE PRESSED");
 
-        if((createPointWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>Defaults.minDistance)){
+        currentLayer = layers.get(controls.cCommons.layer);
+
+        if((controls.cMouse.createPointWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>controls.cCircle.minDistance)){
             currentLayer.createPointOnMouse(this, currentPointStyle);
         }
-        else if(deletePointWithMousePressed){
+        else if(controls.cMouse.deletePointWithMousePressed){
             currentLayer.deletePointOn(new PVector(mouseX, mouseY), 1.0f);
+            controls.cDefaults.resetBackground = true;
         }
-        else if((createParticleWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>Defaults.minDistance)){
+        else if((controls.cMouse.createParticleWithMousePressed) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>controls.cCircle.minDistance)){
             currentLayer.createParticleOnMouse(this, currentParticleStyle);
         }
-        else if(deleteParticleWithMousePressed){
+        else if(controls.cMouse.deleteParticleWithMousePressed){
             currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
+            controls.cDefaults.resetBackground = true;
         }/*
         else if(addVertexOnClick){
             createVertexOnMouse();
@@ -155,10 +186,35 @@ public class Main extends PApplet {
 
     public void mouseDragged(){
 
-        //currentLayer.createParticleOnMouse(this, currentParticleStyle);
-        currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
-    }
+        println("MOUSE DRAGGED");
+        currentLayer = layers.get(controls.cCommons.layer);
 
+        if((controls.cMouse.createPointWithMouseDragged) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>controls.cCircle.minDistance)){
+            currentLayer.createPointOnMouse(this, controls);
+            lastPoint = new PVector(mouseX, mouseY);
+        }
+        else if(controls.cMouse.deletePointWithMouseDragged){
+            currentLayer.deletePointOn(new PVector(mouseX, mouseY), controls.cCircle.minDistance);
+            controls.cDefaults.resetBackground = true;
+        }
+        else if((controls.cMouse.createParticleWithMouseDragged) && (dist(mouseX, mouseY, lastPoint.x, lastPoint.y)>controls.cCircle.minDistance)){
+            currentLayer.createParticleOnMouse(this, controls);
+        }
+        else if(controls.cMouse.deleteParticleWithMouseDragged){
+            currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), controls.cCircle.minDistance);
+            controls.cDefaults.resetBackground = true;
+        }
+        /*
+        else if(addVertexOnDrag){
+            createVertexOnMouse();
+        }
+        else if(editBezierOnDrag){
+            editBezier();
+        }
+        else if(editPolyPointOnDrag){
+            editPolyLinePoint();
+        }*/
+    }
 
     void createLayers(){
         layers = new ArrayList<Layer>();
@@ -198,7 +254,6 @@ public class Main extends PApplet {
             l.deleteAllSources();
         }
     }
-
 
 
 }
