@@ -29,11 +29,11 @@ public class Layer {
     }
 
 
-    void update(PApplet pA){
+    void update(PApplet pA, ControlWindow cw){
         for(int ns=0; ns<lSets.size(); ns++){
             SetOfPoints set = lSets.get(ns);
             set.update();
-            if(Defaults.displayPoints){
+            if(cw.cDefaults.displayPoints){
                 set.draw(pA);
             }
         }
@@ -42,14 +42,14 @@ public class Layer {
                 AttractedParticle part = lParticles.get(np);
                 if(part!=null && part.isAlive(pA.frameCount)){
                     part.move(lPoints, pA.frameCount);
-                    if(Defaults.displayParticles){ part.display(pA); }
+                    if(cw.cDefaults.displayParticles){ part.display(pA); }
                     if(part.isGoal()){ lParticles.remove(np); }
                 }
             }
         }
         for(int ng=0; ng<lSources.size(); ng++){
             SourceOfParticles sop = lSources.get(ng);
-            if(Defaults.displaySources){
+            if(cw.cDefaults.displaySources){
                 sop.draw();
             }
             if(sop.startFrame<pA.frameCount && !sop.createdParticles){

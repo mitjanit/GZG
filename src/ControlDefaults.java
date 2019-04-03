@@ -1,5 +1,8 @@
 import controlP5.*;
+import controlP5.Button;
+import processing.core.PApplet;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +23,13 @@ public class ControlDefaults {
     Button bSaveFrame, bSavePDF, bSaveVideo, bSaveBig;
     Button bDivGravity, bDivSpinAngle;
     boolean divGravity, divSpinAngle;
-    boolean resetBackground, liveColor, displayAll=true, displaySources=true, displayPoints = true, displayParticles = true;
+
+    boolean saveOneFrame = false, saveToPrint = false, saveVideoFrame = false;
+    boolean saveBigSize = false;
+    boolean bigExport = true;
+
+    boolean resetBackground, liveColor;
+    boolean displayAll=true, displaySources=true, displayPoints = true, displayParticles = true;
     boolean fadeEffect, fadeIn, fadeOut;
 
     // TRANSFORMATIONS
@@ -205,7 +214,7 @@ public class ControlDefaults {
         bDisplayPoints = cp5.addButton("SHOW POINTS").setValue(0)
                 .setPosition(marginLeft + rangeWidth/4, marginTop+ rowStep*10)
                 .setSize(rangeWidth/4 - 3 ,controlHeight)
-                .setSwitch(true).setOff().setLabel("SHOW POINTS")
+                .setSwitch(true).setOn().setLabel("SHOW POINTS")
                 .moveTo("default")
                 .addListener(new ControlListener() {
                     public void controlEvent(ControlEvent theEvent){
@@ -214,7 +223,7 @@ public class ControlDefaults {
                 })
         ;
 
-        displayPoints = false;
+        displayPoints = true;
 
         // DISPLAY PARTICLES
         bDisplayParticles = cp5.addButton("SHOW PARTICLES").setValue(0)
@@ -485,8 +494,32 @@ public class ControlDefaults {
         slAngles.setValue(0);
     }
 
-    public void checkControlEvents(ControlEvent theControlEvent){
-        if(theControlEvent.isFrom("RESET BG")) {
+    public void checkControlEvents(PApplet pA, ControlEvent theControlEvent){
+        if(theControlEvent.isFrom("SAVE FRAME")) {
+            if(pA.frameCount>100){
+                saveOneFrame = true;
+                println("Save Frame");
+            }
+        }
+        else if(theControlEvent.isFrom("SAVE PDF")) {
+            if(pA.frameCount>100){
+                saveToPrint = true; saveOneFrame = true;
+                println("Save PDF");
+            }
+        }
+        else if(theControlEvent.isFrom("SAVE VIDEO")) {
+            if(pA.frameCount>100){
+                saveVideoFrame = !saveVideoFrame;
+                println("Save Video:"+saveVideoFrame);
+            }
+        }
+        else if(theControlEvent.isFrom("SAVE BIG")) {
+            if(pA.frameCount>100){
+                saveBigSize = true;
+                println("Save Big Frame");
+            }
+        }
+        else if(theControlEvent.isFrom("RESET BG")) {
             resetBackground = true;
             println("RESET BACKGROUND ");
         }
@@ -557,19 +590,20 @@ public class ControlDefaults {
             println("DISPLAY SOURCES: "+displaySources);
         }
         else if(theControlEvent.isFrom("REMOVE ALL")) {
-            //removeAll();
+            Main.removeAll();
+            resetBackground = true;
             println("REMOVE ALL");
         }
         else if(theControlEvent.isFrom("R. POINTS")) {
-            //removeAllPoints();
+            Main.removeAllPoints();
             println("REMOVE ALL POINTS");
         }
         else if(theControlEvent.isFrom("R. PARTICLES")) {
-            //removeAllParticles();
+            Main.removeAllParticles();
             println("REMOVE ALL PARTICLES");
         }
         else if(theControlEvent.isFrom("R. SOURCES")) {
-            //removeAllSources();
+            Main.removeAllSources();
             println("REMOVE ALL SOURCES");
         }
         // TRANSFORMATIONS

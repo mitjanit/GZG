@@ -444,7 +444,7 @@ public class ControlWindow extends PApplet {
         cBezier.checkControlEvents(theControlEvent, this);
         cMouse.checkControlEvents(theControlEvent);
         cRepeat.checkControlEvents(theControlEvent);
-        cDefaults.checkControlEvents(theControlEvent);
+        cDefaults.checkControlEvents(this, theControlEvent);
         cCommons.checkControlEvents(theControlEvent);
         cCircle.checkControlEvents(theControlEvent);
         cSpiral.checkControlEvents(theControlEvent);
@@ -774,6 +774,7 @@ public class ControlWindow extends PApplet {
         PVector c1 = cLine.corner1.copy();
         PVector c2 = cLine.corner2.copy();
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE RANDOM PARTICLES ON LAYER " + l.id + ".");
         l.createAreaOfParticles(pA, numParts, minD, c1, c2, style);
     }
@@ -784,6 +785,7 @@ public class ControlWindow extends PApplet {
         int nC = cGrid.numCols;
         int nR = cGrid.numRows;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE GRID OF PARTICLES ON LAYER " + l.id + ".");
         l.createGridOfParticles(pA, c1, c2, nC, nR, style);
     }
@@ -795,6 +797,7 @@ public class ControlWindow extends PApplet {
         int nR = cGrid.numRows;
         float fWidth = cParticles.frameWidth;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE FRAME OF PARTICLES ON LAYER " + l.id + ".");
         l.createFrameOfParticles(pA, c1, c2, nC, nR, fWidth, style);
     }
@@ -809,6 +812,7 @@ public class ControlWindow extends PApplet {
         RangFloat aStep = cCircle.angleStep;
         RangFloat rAng = cCircle.randomAngle;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE RING OF PARTICLES ON LAYER " + l.id + ".");
         l.createRingOfParticles(pA, c, minR, maxR, rVar, rStep, angle, aStep, rAng, style);
     }
@@ -819,6 +823,7 @@ public class ControlWindow extends PApplet {
         PVector c1 = cLine.corner1.copy();
         PVector c2 = cLine.corner2.copy();
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE LINE OF PARTICLES ON LAYER " + l.id + ".");
         l.createLineOfParticles(pA, numParts, fWidth, c1, c2, style);
         }
@@ -836,6 +841,7 @@ public class ControlWindow extends PApplet {
         RangFloat aStep = cCircle.angleStep;
         RangFloat rAng = cCircle.randomAngle;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE LINE OF PARTICLES ON LAYER " + l.id + ".");
         l. createPolygonOfParticles(pA, c, nVertexs, numParts, fWidth, minR, maxR, rVar, rStep, angle, aStep, rAng, style);
     }
@@ -850,6 +856,7 @@ public class ControlWindow extends PApplet {
         RangFloat aStep = cCircle.angleStep;
         RangFloat rAng = cCircle.randomAngle;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE SPIRAL OF PARTICLES ON LAYER " + l.id + ".");
         l.createSpiralOfParticles(pA, c, minR, maxR, rVar, rStep, angle, aStep, rAng, style);
     }
@@ -863,6 +870,7 @@ public class ControlWindow extends PApplet {
         RangFloat angle = cCircle.angle;
         RangFloat aStep = cCircle.angleStep;
         AttractedParticleStyle style = createAttractedParticleStyleFromGUI();
+        style.randomStyle();
         println("CREATE WAVE OF PARTICLES ON LAYER " + l.id + ".");
         l.createWaveOfParticles(pA, c1, c2, amplitud, ampAsc, xStep, angle, aStep, style);
     }

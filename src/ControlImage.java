@@ -1,6 +1,9 @@
 import controlP5.*;
 import java.io.File;
-import select.files.*;
+
+import processing.core.PApplet;
+import select.files.SelectLibrary;
+//import select.files.*;
 import static controlP5.ControlP5Constants.*;
 import static processing.core.PApplet.println;
 
@@ -16,10 +19,13 @@ public class ControlImage {
     float threshold;
 
     SelectLibrary files;
+    File file;
+    ControlWindow cw;
 
     public ControlImage(ControlWindow cw){
         setupImageControls(cw);
-        files = new SelectLibrary(cw);
+        this.cw = cw;
+        files = new SelectLibrary((PApplet)cw);
     }
 
     public void setupImageControls(ControlWindow cw){
@@ -126,7 +132,7 @@ public class ControlImage {
         // ASC ATTRACTOR
         if(theControlEvent.isFrom("LOAD PIC")) {
             println("LOADING PIC!!! ");
-            files.selectInput("Select image:", "selectImage");
+            this.cw.selectInput("Select image:","selectImage", file, this);
         }
         // ASC ATTRACTOR
         else if(theControlEvent.isFrom("ASC ATT")) {
@@ -162,8 +168,8 @@ public class ControlImage {
             println("Threshold : "+threshold);
         }
     }
-
-    void selectImage(File selection){
+    public void selectImage(File selection){
+        println("SELECT IMAGE FUNCTION");
         if(selection==null){
             pathImage=Defaults.DEFAULT_IMG;
         }
@@ -173,4 +179,6 @@ public class ControlImage {
         }
         tImage.setValue(pathImage);
     }
+
+
 }

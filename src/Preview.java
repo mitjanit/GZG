@@ -3,6 +3,7 @@ import geomerative.RG;
 import geomerative.RPoint;
 import geomerative.RShape;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 import java.util.ArrayList;
 
@@ -907,29 +908,16 @@ public class Preview {
     // Preview PARTICLES ********************************************//
 
     public  static void previewParticles(PApplet pA, ControlWindow cw){
+        println("PREVIEW PARTICLES");
         switch(cw.cParticles.particleDist) {
             case 0: previewAreaOfParticles(pA, cw); break;
             case 1: previewGridOfParticles(pA, cw); break;
             case 2: previewFrameOfParticles(pA, cw); break;
-            case 3:
-                println("RING OF PARTICLES");
-                break;
-
-            case 4:
-                println("LINE OF PARTICLES");
-                break;
-
-            case 5:
-                println("POLYGON OF PARTICLES");
-                break;
-
-            case 6:
-                println("SPIRAL OF PARTICLES");
-                break;
-
-            case 7:
-                println("WAVE OF PARTICLES");
-                break;
+            case 3: previewRingOfParticles(pA, cw); break;
+            case 4: previewLineOfParticles(pA, cw); break;
+            case 5: previewPolygonOfParticles(pA, cw); break;
+            case 6: previewSpiralOfParticles(pA, cw); break;
+            case 7: previewWaveOfParticles(pA, cw); break;
         }
     }
 
@@ -1001,17 +989,174 @@ public class Preview {
     }
 
     public static void previewFrameGridDots(PApplet pA, PVector c1, PVector c2, PVector c1i, PVector c2i, float numCols, float numRows, float size){
+
+        previewRectBorder(pA, c1, c2, pA.color(255,0,0));
+        previewRectBorder(pA, c1i, c2i, pA.color(255,0,0));
+
         pA.pushStyle();
         pA.stroke(255,0,0);
         float xStep = (c2.x - c1.x)/numCols;
         float yStep = (c2.y - c1.y)/numRows;
         for(float x = c1.x; x<= c2.x; x+=xStep){
             for(float y = c1.y; y<= c2.y; y+=yStep){
-                pA.line(x, y-size, x, y +size); pA.line(x-size, y,x+size, y);
+                if(!(y>c1i.y && y<c2i.y && x>c1i.x && x<c2i.x)){
+                    pA.line(x, y - size, x, y + size);
+                    pA.line(x - size, y, x + size, y);
+                }
             }
         }
         pA.popStyle();
     }
 
+    public static void previewRingOfParticles(PApplet pA, ControlWindow cw){
+        //println("PREVIEW RING OF PARTICLES");
+        PVector c = cw.cCircle.centre.copy();
+        float r0 = cw.cCircle.minRadius.getMaxValue();
+        float r1 = cw.cCircle.maxRadius.getMaxValue();
+        float a0 = cw.cCircle.angle.getMinValue();
+        float a1 = cw.cCircle.angle.getMaxValue();
+        float rStep = cw.cCircle.radiusStep.getMaxValue();
+        float aStep = cw.cCircle.angleStep.getMaxValue();
 
+        displayCircle(pA, c, r0, a0, a1);
+        displayCircle(pA, c, r1, a0, a1);
+        displayCircleGrid(pA, c, r0, r1, rStep, a0, a1, aStep);
+    }
+
+    public static void displayCircle(PApplet pA, PVector c, float r, float a0, float a1){
+        pA.noFill();
+        pA.stroke(0);
+        pA.arc(c.x, c.y, 2*r, 2*r, a0, a1);
+    }
+
+    public static void displayCross(PApplet pA, PVector c, float s){
+        pA.pushStyle();
+            pA.stroke(0);
+            pA.strokeWeight(1);
+            pA.line(c.x - s, c.y, c.x + s, c.y);
+            pA.line(c.x, c.y -s, c.x, c.y + s);
+        pA.popStyle();
+    }
+
+    public static void displayCircleGrid(PApplet pA, PVector c, float r0, float r1, float rs, float a0, float a1, float as){
+        for(float r=r0; r<=r1; r+=rs){
+            for(float a=a0; a<=a1; a+=as){
+                pA.stroke(0);
+                float x = c.x + r*cos(a);
+                float y = c.y + r*sin(a);
+                displayCross(pA, new PVector(x, y), 5);
+            }
+        }
+    }
+
+    public static void previewLineOfParticles(PApplet pA, ControlWindow cw){
+        PVector c1 = cw.cLine.corner1;
+        PVector c2 = cw.cLine.corner2;
+        float lineWidth = cw.cParticles.frameWidth;
+        int numParts = cw.cCommons.numPoints;
+        pA.stroke(255, 0, 0);
+        pA.line(c1.x, c1.y, c2.x, c2.y);
+
+        pA.stroke(0, 255, 0);
+        pA.line(c1.x - lineWidth, c1.y, c2.x - lineWidth, c2.y);
+        pA.stroke(0, 255, 0);
+        pA.line(c1.x + lineWidth, c1.y, c2.x + lineWidth, c2.y);
+
+        displayLine(pA, c1, c2, numParts);
+    }
+
+    public static void previewPolygonOfParticles(PApplet pA, ControlWindow cw){
+        PVector c = cw.cCircle.centre;
+        int numVertexs = cw.cParticles.numVertexos;
+        int numParticles = cw.cCommons.numPoints;
+        float r0 = cw.cCircle.minRadius.getMaxValue();
+        float r1 = cw.cCircle.maxRadius.getMaxValue();
+        float rs = cw.cCircle.radiusStep.getMaxValue();
+        float as = PConstants.TWO_PI / numVertexs;
+        float a0 = cw.cCircle.randomAngle.getMaxValue();
+
+        for(float r=r0; r<=r1; r+=rs) {
+            float a = 0.0f;
+            ArrayList<PVector> vxs = new ArrayList<PVector>();
+            for (int n = 0; n < numVertexs; n++) {
+                float xpos = c.x + r * cos(a0 + a);
+                float ypos = c.y + r * sin(a0 + a);
+                PVector v = new PVector(xpos, ypos);
+                vxs.add(v);
+                a += as;
+            }
+
+            float amtStep = 1.0f / map(r, r0, r1, 1, numParticles);
+
+            for (int n = 0; n < vxs.size(); n++) {
+
+                PVector c1 = vxs.get(n);
+                PVector c2 = vxs.get((n + 1) % numVertexs);
+
+                for (float amt = 0.0f; amt <= 1.0f; amt += amtStep) {
+                    float xpos = lerp(c1.x, c2.x, amt);
+                    float ypos = lerp(c1.y, c2.y, amt);
+                    PVector position = new PVector(xpos, ypos);
+                    displayCross(pA,position,5);
+                }
+            }
+        }
+    }
+
+    public static void previewSpiralOfParticles(PApplet pA, ControlWindow cw){
+        PVector c = cw.cCircle.centre;
+        float r0 = cw.cCircle.minRadius.getMaxValue();
+        float r1 = cw.cCircle.maxRadius.getMaxValue();
+        float rStep = cw.cCircle.radiusStep.getMaxValue();
+        float ra = cw.cCircle.randomAngle.getMaxValue();
+        float a0 = cw.cCircle.angle.getMinValue();
+        float a1 = cw.cCircle.angle.getMaxValue();
+        float aStep = cw.cCircle.angleStep.getMaxValue();
+
+        for(float r = r0, a=a0; r<r1 && a<a1; r+=rStep, a+=aStep){
+            float x = c.x + r*cos(a+ra);
+            float y = c.y + r*sin(a+ra);
+            PVector pos = new PVector(x, y);
+            displayCross(pA, pos, 5);
+        }
+    }
+
+    public static void previewWaveOfParticles(PApplet pA, ControlWindow cw){
+
+        float xs = cw.cWave.xStep.getMaxValue();
+        float as = cw.cCircle.angleStep.getMaxValue();
+        float h;
+        RangFloat amplitud = cw.cWave.amplitud.copy();
+        float a = cw.cCircle.angle.getMaxValue();
+        PVector p1 = cw.cLine.corner1;
+        PVector p2 = cw.cLine.corner2;
+        boolean ampAsc = cw.cWave.ampAsc;
+
+        float distX = abs(p1.x - p2.x); float distY = abs(p1.y - p2.y);
+
+        if(distX >= distY){
+            float minX = min(p1.x, p2.x); float maxX = max(p1.x, p2.x);
+            for(float x = minX; x < maxX; x+=xs){
+                if(ampAsc) h = map(x, minX, maxX, amplitud.getMinValue(), amplitud.getMaxValue());
+                else h = map(x, minX, maxX, amplitud.getMaxValue(), amplitud.getMinValue());
+                float y = map(x, p1.x, p2.x, p1.y, p2.y) + h*sin(a);
+                PVector pos = new PVector(x, y);
+                displayCross(pA, pos, 5);
+
+                a+= as;
+            }
+        }
+        else {
+            float minY = min(p1.y, p2.y); float maxY = max(p1.y, p2.y);
+            for(float y = minY; y < maxY; y+=xs){
+                if(ampAsc) h = map(y, minY, maxY, amplitud.getMinValue(), amplitud.getMaxValue());
+                else h = map(y, minY, maxY, amplitud.getMaxValue(), amplitud.getMinValue());
+                float x = map(y, p1.y, p2.y, p1.x, p2.x) + h*sin(a);
+                PVector pos = new PVector(x, y);
+                displayCross(pA, pos, 5);
+
+                a+= as;
+            }
+        }
+    }
 }

@@ -228,8 +228,8 @@ class AttractorPoint {
         pA.noFill();
 
         pA.pushMatrix();
-            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2,0);
-            pA.translate(this.position.x, this.position.y, 0);
+            //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2);
+            pA.translate(this.position.x, this.position.y);
 
             if(this.isAttractor()){
                 pA.line(0-radi/4,0,0+radi/4,0);
