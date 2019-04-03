@@ -327,7 +327,7 @@ public class Layer {
     }
 
     //AREAS
-    void createAreasOfPoints(int numTimes, int numPoints, float minDistance, SetOfPointsStyle style,
+    void createAreasOfPoints(ControlWindow controls, int numTimes, int numPoints, float minDistance, SetOfPointsStyle style,
                              RangFloat xR, RangFloat yR,RangFloat dx, RangFloat dy,
                              boolean cloneArea, boolean symmetryX, boolean symmetryY,
                              boolean mirrorX, boolean mirrorY, boolean quadSim, boolean hexaSim, boolean clone, boolean shuffle, boolean randomize, boolean invert){
@@ -336,7 +336,7 @@ public class Layer {
             // Original
             AreaOfPoints aop = new AreaOfPoints(this.id,numPoints, style.enable, xR, yR);
             aop.setParamsFromStyle(style);
-            aop.setPoints(minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+            aop.setPoints(controls,minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
             //aop.setOscillators( );
             lPoints.addAll(aop.points);
             lSets.add(aop);
@@ -359,7 +359,7 @@ public class Layer {
                 RangFloat yr = style.yRange.displaceValues(i*dy.getRandomValue());
                 AreaOfPoints aop = new AreaOfPoints(this.id,numPoints, style.enable, xr,yr);
                 aop.setParamsFromStyle(style);
-                aop.setPoints(minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+                aop.setPoints(controls,minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
                 //aop.setOscillators();
                 lPoints.addAll(aop.points);
                 lSets.add(aop);
@@ -369,7 +369,7 @@ public class Layer {
                     RangFloat yr2 = style.yRange.displaceValues(i*dy.getRandomValue());
                     AreaOfPoints aop2 = new AreaOfPoints(this.id,numPoints, style.enable, xr2,yr2);
                     aop2.setParamsFromStyle(style);
-                    aop2.setPoints(minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+                    aop2.setPoints(controls,minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
                     //aop.setOscillators();
                     lPoints.addAll(aop2.points);
                     lSets.add(aop2);
@@ -378,7 +378,7 @@ public class Layer {
                     RangFloat xr2 = style.xRange.displaceValues(i*dx.getRandomValue());
                     RangFloat yr2 = style.yRange.displaceValues(-i*dy.getRandomValue());
                     AreaOfPoints aop2 = new AreaOfPoints(this.id,numPoints, style.enable, xr2,yr2);
-                    aop2.setPoints(minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+                    aop2.setPoints(controls,minDistance,mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
                     //aop.setOscillators();
                     lPoints.addAll(aop2.points);
                     lSets.add(aop2);

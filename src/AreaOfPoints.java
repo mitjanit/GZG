@@ -1,5 +1,7 @@
 import processing.core.PVector;
 
+import javax.naming.ldap.Control;
+
 import static processing.core.PApplet.println;
 import static processing.core.PApplet.*;
 import static processing.core.PApplet.dist;
@@ -39,7 +41,7 @@ class AreaOfPoints extends SetOfPoints {
     }
 
 
-    public void setPoints(float minDistance, boolean mirrorX, boolean mirrorY, boolean quadSim, boolean hexaSim, boolean clone, boolean shuffle, boolean randomize, boolean invert){
+    public void setPoints(ControlWindow controls, float minDistance, boolean mirrorX, boolean mirrorY, boolean quadSim, boolean hexaSim, boolean clone, boolean shuffle, boolean randomize, boolean invert){
 
         float numAtts = numPoints*ratioAP/100.0f;
         println("numATTS: "+numAtts+", numREPS: "+(numPoints-numAtts));
@@ -55,16 +57,16 @@ class AreaOfPoints extends SetOfPoints {
                 aptemp = new AttractorPoint(pos);
             } while(!aptemp.awayFrom(minDistance, points));
 
-            float mAtt = massAttRangeOut.getRandomValue();
-            //float mAtt = getMappedValue(mapMassAtt, Rang<Float> valueIn, Rang<Float> valueOut, PVector p, PVector r, int np, int npt);
+            PVector ref = controls.cParticles.refColor.copy();
+            float distRef = dist(pos.x, pos.y, ref.x,ref.y);
+            float mAtt = getMappedValueMassAtt(controls, pos, distRef, i, numPoints);
             float mRep = -massRepRangeOut.getRandomValue();
             float mass = (i<=numAtts)?mAtt:mRep;
             float spin = spinAngRangeOut.getRandomValue();
             float np2c = np2CollapseRangeOut.getRandomValue();
 
             AttractorPoint ap = new AttractorPoint(pos, mass, spin, enabled, collapsable, np2c);
-            println(ap);
-            points.add(ap.copy());
+            points.add(ap);println("ORIGINAL:"+ap);
 
             float d = dist(pos.x, pos.y, Defaults.sceneWidth/2, Defaults.sceneHeight/2);
             float dx = (Defaults.sceneWidth/2 - pos.x);
@@ -76,7 +78,7 @@ class AreaOfPoints extends SetOfPoints {
             if(mirrorX || mirrorY){
                 if((mirrorX && abs(dx)>minDistance) || (mirrorY && abs(dy)>minDistance)){
                     AttractorPoint ap2 = getMirrorPoint(pos, mirrorX, mirrorY, dx, dy, mass, spin, np2c, enabled, collapsable, clone, invert, randomize);
-                    points.add(ap2);println("SIMMETRY:"+ap2);
+                    points.add(ap2);println("SYMMETRY:"+ap2);
                 }
             }
             else if(quadSim){
@@ -97,6 +99,36 @@ class AreaOfPoints extends SetOfPoints {
             }
         }
         deletePoints(minDistance);
+    }
+
+    public float getMappedValueMassAtt(ControlWindow c, PVector pos, float distRef, int i, int numPoints){
+        int m = c.cCommons.mapMassAtt;
+        RangFloat rIn = c.cCommons.mapInMassAtt;
+        RangFloat rOut = c.cCommons.massAtt;
+        return getMappedValue(m, rIn, rOut, pos, distRef, i, numPoints);
+    }
+
+    public float getMappedValue(int mapValue, RangFloat valueIn, RangFloat valueOut, PVector pos, float distRef, int i, int numPoints){
+        float s=0;
+        float valueInMin = valueIn.getMinValue();
+        float valueInMax = valueIn.getMaxValue();
+        float valueOutMin = valueOut.getMinValue();
+        float valueOutMax = valueOut.getMaxValue();
+
+        //"NONE", "RANDOM", "POS X","POS X INV", "POS Y", "POS Y INV", "DISTANCE REF", "DISTANCE REF INV", "NUM POINT", "NUM POINT INV"
+        switch(mapValue){
+            case 0: s = valueOut.getMaxValue(); break; //NONE
+            case 1: s = Defaults.getRandom(valueOutMin, valueOutMax); break; // RANDOM
+            case 2: s = map(pos.x, valueInMin, valueInMax, valueOutMin, valueOutMax); break;        // POS X
+            case 3: s = map(pos.x, valueInMin, valueInMax, valueOutMax, valueOutMin); break;    // POS X INV
+            case 4: s = map(pos.y, valueInMin, valueInMax, valueOutMin, valueOutMax); break;        // POS Y
+            case 5: s = map(pos.y, valueInMin, valueInMax, valueOutMax, valueOutMin); break;    // POS Y INV
+            case 6: s = map(distRef, valueInMin, valueInMax, valueOutMin, valueOutMax); break;    // DIST REF
+            case 7: s = map(distRef, valueInMin, valueInMax, valueOutMax, valueOutMin); break;    // DIST REF INV
+            case 8: s = map(i, 0, numPoints, valueOutMin, valueOutMax); break;    // NUM POINT
+            case 9: s = map(i, 0, numPoints, valueOutMax, valueOutMin); break;    // NUM POINT INV
+        }
+        return s;
     }
 
     public AttractorPoint getMirrorPoint(PVector pos, boolean mirrorX, boolean mirrorY, float dx, float dy, float mass, float spin, float np2c, boolean enabled, boolean collapsable, boolean clone, boolean invert, boolean randomize){

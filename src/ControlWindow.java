@@ -145,7 +145,7 @@ public class ControlWindow extends PApplet {
                         createLineOfPoints(l);
                         break;
                     case "random":
-                        createAreaOfPoints(l);
+                        createAreaOfPoints(this, l);
                         break;
                     case "polygon":
                         createPolygonOfPoints(l);
@@ -456,6 +456,7 @@ public class ControlWindow extends PApplet {
         cPoisson.checkControlEvents(theControlEvent, this);
         cImage.checkControlEvents(theControlEvent);
         cParticles.checkControlEvents(theControlEvent, this);
+        cParticles.checkColorControlEvents(theControlEvent, this);
         cWave.checkControlEvents(theControlEvent);
         cOscillation.checkControlEvents(theControlEvent);
         cFlow.checkControlEvents(theControlEvent);
@@ -480,7 +481,7 @@ public class ControlWindow extends PApplet {
         l.createLineOfPoints(nTimes, nPoints, minD, c1, c2, style, dx, dy, symX, symY);
     }
 
-    public void createAreaOfPoints(Layer l) {
+    public void createAreaOfPoints(ControlWindow controls, Layer l) {
         // Collect data from Controls
         int nTimes = cRepeat.numTimes;
         int nPoints = cCommons.numPoints;
@@ -502,7 +503,7 @@ public class ControlWindow extends PApplet {
         boolean randomize = cRandom.randomize;
         boolean invert = cRandom.invert;
         println("CREATE AREA OF POINTS ON LAYER " + l.id + ".");
-        l.createAreasOfPoints(nTimes, nPoints, minD, style, xr, yr, dx, dy, cloneArea, symX, symY, mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
+        l.createAreasOfPoints(controls,nTimes, nPoints, minD, style, xr, yr, dx, dy, cloneArea, symX, symY, mirrorX, mirrorY, quadSim, hexaSim, clone, shuffle, randomize, invert);
     }
 
     public void createPolygonOfPoints(Layer l) {

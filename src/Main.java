@@ -36,7 +36,7 @@ public class Main extends PApplet {
     ArrayList<BezierCurve> beziers = new ArrayList<BezierCurve>();
     ArrayList<PVector> draggingPoints = new ArrayList<PVector>();
 
-    ControlWindow controls;
+    public static ControlWindow controls;
 
     public static void main(String[] args) {
         PApplet.main("Main", args);

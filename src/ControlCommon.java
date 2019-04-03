@@ -1,4 +1,7 @@
 import controlP5.*;
+import processing.core.PApplet;
+import processing.core.PVector;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -440,6 +443,37 @@ public class ControlCommon {
                 default:
             }
         }
+    }
+
+    public float getMappedValue(PApplet pA, int mapValue, RangFloat valueIn, RangFloat valueOut,
+                                float distance, float age, PVector position, PVector refColor, PVector orientation){
+        float s=0;
+        float valueInMin = valueIn.getMinValue();
+        float valueInMax = valueIn.getMaxValue();
+        float valueOutMin = valueOut.getMinValue();
+        float valueOutMax = valueOut.getMaxValue();
+
+        //"NONE", "DISTANCE", "AGE","ORIENTATION X", "ORIENTATION Y", "POSITION X", "POSITION Y", "DISTANCE REF"
+        switch(mapValue){
+            case 0: s = valueOut.getMaxValue(); break; //NONE
+            case 1: s = pA.map(distance, valueInMin, valueInMax, valueOutMin, valueOutMax); break;        // DISTANCE
+            case 2: s = pA.map(distance, valueInMin, valueInMax, valueOutMax, valueOutMin); break;        // DISTANCE INV
+            case 3: s = pA.map(age%500, valueInMin, valueInMax, valueOutMin, valueOutMax); break;    // AGE
+            case 4: s = pA.map(age%500, valueInMin, valueInMax, valueOutMax, valueOutMin); break;    // AGE INV
+            case 5: s = pA.map(orientation.x, valueInMin, valueInMax, valueOutMin, valueOutMax); break;   // ORIENTATION X
+            case 6: s = pA.map(orientation.x, valueInMin, valueInMax, valueOutMax, valueOutMin); break;   // ORIENTATION X INV
+            case 7: s = pA.map(orientation.y, valueInMin, valueInMax, valueOutMin, valueOutMax); break;  // ORIENTATION Y
+            case 8: s = pA.map(orientation.y, valueInMin, valueInMax, valueOutMax, valueOutMin); break;  // ORIENTATION Y INV
+            case 9: s = pA.map(position.x, valueInMin, valueInMax, valueOutMin, valueOutMax); break;     // POSITION X
+            case 10: s = pA.map(position.x, valueInMin, valueInMax, valueOutMax, valueOutMin); break;     // POSITION X INV
+            case 11: s = pA.map(position.y, valueInMin, valueInMax, valueOutMin, valueOutMax); break;     // POSITION Y
+            case 12: s = pA.map(position.y, valueInMin, valueInMax, valueOutMax, valueOutMin); break;     // POSITION Y INV
+            case 13: float distRef = pA.dist(position.x, position.y, refColor.x, refColor.y);
+                    s = pA.map(distRef, valueInMin, valueInMax, valueOutMin, valueOutMax); break;       // DISTANCE REF COLOR
+            case 14: float distRef2 = pA.dist(position.x, position.y, refColor.x, refColor.y);
+                    s = pA.map(distRef2, valueInMin, valueInMax, valueOutMax, valueOutMin); break;       // DISTANCE REF COLOR INV
+        }
+        return s;
     }
 
 }

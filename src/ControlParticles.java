@@ -715,11 +715,11 @@ public class ControlParticles {
             //println("Equal Width & Height: "+equalWidthAndHeight);
         }
         // REF COLOR SLIDER 2D
-        else if(theControlEvent.isFrom("REF COLOR")){
+        else if(theControlEvent.isFrom("REF COLOR") || theControlEvent.isFrom("REF")){
             float ox = s2dRefColor.getArrayValue()[0];
             float oy = s2dRefColor.getArrayValue()[1];
             refColor = new PVector(ox, oy);
-            //println("REF COLOR // x: "+refColor.x+", y: "+refColor.y);
+            println("REF COLOR // x: "+refColor.x+", y: "+refColor.y);
         }
         // MAP RED MODE
         else if(theControlEvent.isFrom("MAP RED")) {
