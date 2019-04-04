@@ -16,9 +16,11 @@ public class ControlCircle {
     float minDistance=0;
     boolean single, fibonacci;
 
-    boolean lockX, lockY; //VIUS REPETITS
+    ControlWindow controls;
 
     public ControlCircle(ControlWindow cw){
+
+        this.controls = cw;
         setupCircleControls(cw);
     }
 
@@ -209,10 +211,10 @@ public class ControlCircle {
         if(theControlEvent.isFrom("CENTRE")) {
             float ox = s2dCentre.getArrayValue()[0];
             float oy = s2dCentre.getArrayValue()[1];
-            if(lockX){
+            if(controls.cLine.lockX){
                 ox = centre.x;
             }
-            if(lockY){
+            if(controls.cLine.lockY){
                 oy = centre.y;
             }
             centre = new PVector(ox, oy);
@@ -226,6 +228,7 @@ public class ControlCircle {
             s2dCentre.setBroadcast(false); s2dCentre.setArrayValue(o); s2dCentre.setBroadcast(true);
             centre = new PVector(o[0], o[1]);
             println("ORIGIN");
+            println("CENTRE POSITION // x: "+centre.x+", y: "+centre.y);
         }
         // SINGLE BUTTON
         else if(theControlEvent.isFrom("SINGLE")) {
@@ -302,7 +305,7 @@ public class ControlCircle {
         //RANDOM ANGLE
         else if(theControlEvent.isFrom("RANDOM ANGLE")) {
             randomAngle.setValues(rRandomAngle.getLowValue(), rRandomAngle.getHighValue());
-            println("RANDOM ANGLE RANGE: "+angleStep);
+            println("RANDOM ANGLE RANGE: "+randomAngle);
         }
         // MIN DISTANCE
         else if(theControlEvent.isFrom("MIN DIST")) {

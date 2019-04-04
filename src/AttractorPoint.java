@@ -223,7 +223,12 @@ class AttractorPoint {
         float minR = 0.5f, maxR = 5;
 
         pA.strokeCap(ROUND);
-        pA.stroke(50,50);
+        if(isCollapsed()) {
+            pA.stroke(255, 0, 0, 50);
+        }
+        else {
+            pA.stroke(50, 50);
+        }
         pA.strokeWeight(map(radi, 0, 200, minR, maxR));
         pA.noFill();
 

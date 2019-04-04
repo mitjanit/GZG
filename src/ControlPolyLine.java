@@ -1,4 +1,5 @@
 import controlP5.*;
+import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -136,6 +137,23 @@ public class ControlPolyLine {
             addPolyPointOnClick = false; editPolyPointOnDrag = false;
         }
 
+    }
+
+    void addPolyLinePoint(PVector p){
+        PVector np = new PVector(p.x,p.y);
+        polylinePoints.add(np);
+    }
+
+    void editPolyLinePoint(PApplet pA, PVector mouse) {
+        if(editPolyPointOnDrag){
+            for(PVector p: polylinePoints){
+                float d = p.dist(mouse);
+                if (d<10){
+                    p.x = pA.constrain(mouse.x,10, Defaults.screenWidth-10);
+                    p.y = pA.constrain(mouse.y, 10, Defaults.sceneHeight-10);
+                }
+            }
+        }
     }
 
     void closePolyLine(){

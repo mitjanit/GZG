@@ -57,8 +57,10 @@ public class ControlCommon {
     Range rMapMassAttIn, rMapMassRepIn, rMapSpinAngleIn, rMapNPCollapseIn;
     RangFloat mapInMassAtt, mapInMassRep, mapInSpinAngle, mapInNPCollapse;
 
+    ControlWindow controls;
 
     public ControlCommon(ControlWindow cw){
+        this.controls = cw;
         setupCommonControls(cw);
     }
 
@@ -395,12 +397,16 @@ public class ControlCommon {
         else if(theControlEvent.isFrom("MAP MASS ATT")) {
             mapMassAtt = (int)slMapMassAtt.getValue();
             println("MAP MASS ATT: "+mapMassAtt+" - "+mapPointOptions.get(mapMassAtt));
+            float nP = numPoints;
+            if(controls.activeTab.equals("grid")){
+                nP = controls.cGrid.numCols* controls.cGrid.numRows;
+            }
             switch(mapMassAtt){
                 case 0: case 1: rMapMassAttIn.setRange(0, Defaults.sceneWidth).setRangeValues(0, Defaults.sceneWidth); break; // NONE & RANDOM
                 case 2: case 3: rMapMassAttIn.setRange(0,Defaults.sceneWidth).setRangeValues(0, Defaults.sceneWidth); break; // POS X & X INV
                 case 4: case 5: rMapMassAttIn.setRange(0,Defaults.sceneHeight).setRangeValues(0, Defaults.sceneHeight); break; // POS Y & Y INV
                 case 6: case 7: rMapMassAttIn.setRange(0,Defaults.sceneWidth).setRangeValues(0, Defaults.sceneWidth); break; // DIST REF & DIST REF INV
-                case 8: case 9: rMapMassAttIn.setRange(0,numPoints).setRangeValues(0, numPoints); break; // DIST REF & DIST REF INV
+                case 8: case 9: rMapMassAttIn.setRange(0,nP).setRangeValues(0, nP); break; // NUM POINT & NUM POINT INV
                 default:
             }
         }

@@ -170,16 +170,17 @@ public class Main extends PApplet {
         else if(controls.cMouse.deleteParticleWithMousePressed){
             currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
             controls.cDefaults.resetBackground = true;
-        }/*
+        }
+        /*
         else if(addVertexOnClick){
             createVertexOnMouse();
-        }
-        else if(addBezierOnClick){
-            addBezier();
-        }
-        else if(addPolyPointOnClick){
-            addPolyLinePoint();
         }*/
+        else if(controls.cBezier.addBezierOnClick){
+            controls.cBezier.addBezier(new PVector(mouseX, mouseY));
+        }
+        else if(controls.cPolyline.addPolyPointOnClick){
+            controls.cPolyline.addPolyLinePoint(new PVector(mouseX, mouseY));
+        }
 
         lastPoint = new PVector(mouseX, mouseY);
     }
@@ -207,13 +208,17 @@ public class Main extends PApplet {
         /*
         else if(addVertexOnDrag){
             createVertexOnMouse();
-        }
-        else if(editBezierOnDrag){
-            editBezier();
-        }
-        else if(editPolyPointOnDrag){
-            editPolyLinePoint();
         }*/
+        else if(controls.cBezier.editBezierOnDrag){
+            controls.cBezier.editBezier(new PVector(mouseX, mouseY));
+        }
+        else if(controls.cPolyline.editPolyPointOnDrag){
+            controls.cPolyline.editPolyLinePoint(this, new PVector(mouseX,mouseY ));
+        }
+    }
+
+    public void mouseReleased() {
+        controls.cBezier.draggingPoints.clear();
     }
 
     void createLayers(){

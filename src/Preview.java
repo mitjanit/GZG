@@ -36,7 +36,7 @@ public class Preview {
     // Preview LINE ************************************************//
 
     public static void previewLineOfPoints(PApplet pA, ControlWindow cw) {
-        //println("LINE OF POINTS.");
+        println("LINE OF POINTS.");
         int nt= cw.cRepeat.numTimes;
         int numPoints = cw.cCommons.numPoints;
         PVector corner1 = cw.cLine.corner1;
@@ -68,17 +68,23 @@ public class Preview {
     }
 
     public static void displayLine(PApplet pA, PVector p1, PVector p2, int numP) {
-        for (int i = 0; i < numP; i++) {
-            float x = map(i, 0, numP-1, p1.x, p2.x);
-            float y = map(i, 0, numP-1, p1.y, p2.y);
-            pA.fill(0);
-            pA.noStroke();
-            pA.pushMatrix();
-                //pA.translate(-screenWidth/2, -screenHeight/2, 0);
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 5, 5);
-            pA.popMatrix();
-        }
+        pA.pushStyle();
+            pA.stroke(0,50);
+            pA.strokeWeight(1);
+            pA.line(p1.x, p1.y, p2.x, p2.y);
+            for (int i = 0; i < numP; i++) {
+                float x = map(i, 0, numP-1, p1.x, p2.x);
+                float y = map(i, 0, numP-1, p1.y, p2.y);
+                pA.fill(0);
+                pA.noStroke();
+                pA.pushMatrix();
+                    //pA.translate(-screenWidth/2, -screenHeight/2, 0);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 15, 15);
+                pA.popMatrix();
+
+            }
+        pA.popStyle();
     }
 
     // Preview AREA ****************************************************//
@@ -141,15 +147,21 @@ public class Preview {
     // Preview POLYLINE ************************************************//
 
     public static void displayPolyLine(PApplet pA, PVector p1, PVector p2, int numP) {
-        for (int i = 0; i < numP; i++) {
-            float x = map(i, 0, numP-1, p1.x, p2.x);
-            float y = map(i, 0, numP-1, p1.y, p2.y);
-            pA.fill(0); //noStroke();
-            pA.pushMatrix();
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 10, 10);
-            pA.popMatrix();
-        }
+        pA.pushStyle();
+            pA.stroke(0,50);
+            pA.strokeWeight(1);
+            pA.line(p1.x, p1.y, p2.x, p2.y);
+            for (int i = 0; i < numP; i++) {
+                float x = map(i, 0, numP-1, p1.x, p2.x);
+                float y = map(i, 0, numP-1, p1.y, p2.y);
+                pA.fill(0); //noStroke();
+                pA.noStroke();
+                pA.pushMatrix();
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 15, 15);
+                pA.popMatrix();
+            }
+        pA.popStyle();
     }
 
     public static void previewPolyLineOfPoints(PApplet pA, ControlWindow cw) {
@@ -158,11 +170,8 @@ public class Preview {
         RangFloat dx = cw.cRepeat.displaceX;
         RangFloat dy = cw.cRepeat.displaceY;
 
-        pA.strokeWeight(1);
-        pA.noFill();
-
         for (int t=0; t<nt; t++) {
-            float ddx = t*dx.getMaxValue(), ddy = t*dy.getMaxValue();
+
             pA.pushMatrix();
                 //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
                 //TEXT
@@ -208,9 +217,6 @@ public class Preview {
         RangFloat dx = cw.cRepeat.displaceX;
         RangFloat dy = cw.cRepeat.displaceY;
         RangFloat dr = cw.cRepeat.displaceR;
-
-        pA.strokeWeight(1);
-        pA.noFill();
 
         PVector centroide = getCentroide(getPointsFromBeziers(cw.cBezier.beziers));
         for (int t=0; t<nt; t++) {
@@ -373,25 +379,33 @@ public class Preview {
 
     public static void displayRing(PApplet pA, ControlWindow cw, PVector c, float r0, float r1, float rStep) {
 
+        float a0 = cw.cCircle.rAngle.getLowValue();
+        float a1 = cw.cCircle.rAngle.getHighValue();
+
         for (float r = r0; r<r1; r+=rStep) {
 
-            float a0 = cw.cCircle.rAngle.getLowValue();
-            float a1 = cw.cCircle.rAngle.getHighValue();
             float aStep = map(r, r0, r1, cw.cCircle.rAngleStep.getHighValue(), cw.cCircle.rAngleStep.getLowValue());
             rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getHighValue(), cw.cCircle.rRadiusStep.getLowValue());
 
-            for (float a = a0; a < a1; a += aStep) {
-                float rf = r + rStep;
-                float x = c.x + rf*cos(a);
-                float y = c.y + rf*sin(a);
+            pA.pushStyle();
+                pA.noFill();
+                pA.stroke(0,50);
+                pA.ellipse(c.x, c.y, 2*r0,2*r0);
+                pA.ellipse(c.x, c.y, 2*r1,2*r1);
                 pA.fill(0);
                 pA.noStroke();
-                pA.pushMatrix();
-                    //pA.translate(-screenWidth/2, -screenHeight/2, 0);
-                    pA.translate(x, y, 0);
-                    pA.ellipse(0, 0, 5, 5);
-                pA.popMatrix();
-            }
+                for (float a = a0; a < a1; a += aStep) {
+                    float rf = r + rStep;
+                    float x = c.x + rf*cos(a);
+                    float y = c.y + rf*sin(a);
+
+                    pA.pushMatrix();
+                        //pA.translate(-screenWidth/2, -screenHeight/2, 0);
+                        pA.translate(x, y);
+                        pA.ellipse(0, 0, 15, 15);
+                    pA.popMatrix();
+                }
+            pA.popStyle();
         }
     }
 
@@ -485,24 +499,25 @@ public class Preview {
         }
     }
 
-    public static void displayGrid(PApplet pA, PVector p1, PVector p2, int nc, int nr) {
+    public static void displayGrid(PApplet pA, PVector p1, PVector p2, int nr, int nc) {
 
         float wCol = (p2.x - p1.x)/(nc-1);
         float hRow = (p2.y - p1.y)/(nr-1);
 
+        pA.pushStyle();
         for (int r=0; r<nr; r++) {
             for (int c=0; c < nc; c++) {
                 float x = p1.x + wCol*c;
                 float y = p1.y + hRow*r;
-                pA.fill(0);
-                pA.noStroke();
+                pA.fill(0); pA.noStroke();
                 pA.pushMatrix();
                     //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                    pA.translate(x, y, 0);
-                    pA.ellipse(0, 0, 5, 5);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 15, 15);
                 pA.popMatrix();
             }
         }
+        pA.popStyle();
     }
 
     // Preview WAVE ********************************************************//

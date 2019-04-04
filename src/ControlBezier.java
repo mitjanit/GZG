@@ -236,6 +236,56 @@ public class ControlBezier  {
         }
     }
 
+    void addBezier(PVector p){
+        PVector a1, a2, c1, c2;
+        float dc = 50;
+
+        if(addBezierOnClick){
+
+            if(beziers.size()>0){
+                BezierCurve previousCurve = beziers.get(beziers.size()-1);
+                a1 = previousCurve.a2.copy();
+            }
+            else {
+                a1 = new PVector(Defaults.screenWidth/2,Defaults.screenHeight/2);
+            }
+            c1 = new PVector(a1.x-dc,a1.y);
+            a2 = new PVector(constrain(p.x,10, Defaults.screenWidth-10),constrain(p.y, 10, Defaults.screenHeight-10));
+            c2 = new PVector(constrain(a2.x+dc, 10, Defaults.screenWidth-10),constrain(a2.y, 10, Defaults.screenHeight-10));
+
+            BezierCurve bc = new BezierCurve(c1,c2,a1,a2);
+            beziers.add(bc);
+        }
+    }
+
+    void editBezier(PVector mouse) {
+        if(editBezierOnDrag){
+            if(draggingPoints.size()>0){
+                int np=0;
+                for(PVector dp : draggingPoints){
+                    dp.x = constrain(mouse.x,10, Defaults.screenWidth-10);
+                    dp.y = constrain(mouse.y, 10, Defaults.screenHeight-10);
+                    np++;
+                    //if(curveMode) break;
+                    if(quadraticMode && np==2) break;
+                }
+            }
+            else {
+                for(BezierCurve c: beziers){
+                    for(PVector p : c.points) {
+                        float d = p.dist(new PVector(mouse.x,mouse.y));
+                        if (d<10){
+                            draggingPoints.add(p);
+                            if(c.isControlPoint(p)) println("DRAGGING CONTROL POINT");
+                            if(c.isAnchorPoint(p))  println("DRAGGING ANCHOR POINT");
+                            //if(curveMode) break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     void closeBezier(){
         float dc = 50;
         PVector a2 = beziers.get(0).a1, c2 = new PVector(constrain(a2.x+dc, 10, Defaults.screenWidth-10),constrain(a2.y, 10, Defaults.screenHeight-10));

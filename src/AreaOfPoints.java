@@ -41,7 +41,10 @@ class AreaOfPoints extends SetOfPoints {
     }
 
 
-    public void setPoints(ControlWindow controls, float minDistance, boolean mirrorX, boolean mirrorY, boolean quadSim, boolean hexaSim, boolean clone, boolean shuffle, boolean randomize, boolean invert){
+    public void setPoints(ControlWindow controls, float minDistance,
+                          boolean mirrorX, boolean mirrorY,
+                          boolean quadSim, boolean hexaSim,
+                          boolean clone, boolean shuffle, boolean randomize, boolean invert){
 
         float numAtts = numPoints*ratioAP/100.0f;
         println("numATTS: "+numAtts+", numREPS: "+(numPoints-numAtts));
@@ -60,10 +63,10 @@ class AreaOfPoints extends SetOfPoints {
             PVector ref = controls.cParticles.refColor.copy();
             float distRef = dist(pos.x, pos.y, ref.x,ref.y);
             float mAtt = getMappedValueMassAtt(controls, pos, distRef, i, numPoints);
-            float mRep = -massRepRangeOut.getRandomValue();
+            float mRep = -getMappedValueMassRep(controls, pos, distRef, i, numPoints);
             float mass = (i<=numAtts)?mAtt:mRep;
-            float spin = spinAngRangeOut.getRandomValue();
-            float np2c = np2CollapseRangeOut.getRandomValue();
+            float spin = getMappedValueSpinAngle(controls, pos, distRef, i, numPoints);
+            float np2c = getMappedValueNP2Collapse(controls, pos, distRef, i, numPoints);
 
             AttractorPoint ap = new AttractorPoint(pos, mass, spin, enabled, collapsable, np2c);
             points.add(ap);println("ORIGINAL:"+ap);
@@ -105,6 +108,27 @@ class AreaOfPoints extends SetOfPoints {
         int m = c.cCommons.mapMassAtt;
         RangFloat rIn = c.cCommons.mapInMassAtt;
         RangFloat rOut = c.cCommons.massAtt;
+        return getMappedValue(m, rIn, rOut, pos, distRef, i, numPoints);
+    }
+
+    public float getMappedValueMassRep(ControlWindow c, PVector pos, float distRef, int i, int numPoints){
+        int m = c.cCommons.mapMassRep;
+        RangFloat rIn = c.cCommons.mapInMassRep;
+        RangFloat rOut = c.cCommons.massRep;
+        return getMappedValue(m, rIn, rOut, pos, distRef, i, numPoints);
+    }
+
+    public float getMappedValueSpinAngle(ControlWindow c, PVector pos, float distRef, int i, int numPoints){
+        int m = c.cCommons.mapSpinAngle;
+        RangFloat rIn = c.cCommons.mapInSpinAngle;
+        RangFloat rOut = c.cCommons.spinAng;
+        return getMappedValue(m, rIn, rOut, pos, distRef, i, numPoints);
+    }
+
+    public float getMappedValueNP2Collapse(ControlWindow c, PVector pos, float distRef, int i, int numPoints){
+        int m = c.cCommons.mapNPCollapse;
+        RangFloat rIn = c.cCommons.mapInNPCollapse;
+        RangFloat rOut = c.cCommons.np2Col;
         return getMappedValue(m, rIn, rOut, pos, distRef, i, numPoints);
     }
 

@@ -63,15 +63,19 @@ public class BezierCurve {
     }
 
     void displayPoints(PApplet pA, int np, float ddx, float ddy){
-        if(np>1){
-            float step = 1.0f/(np-1);
-            for(float t=0.0f; t<=1.0f; t+=step){
-                float t2=1.0f-t;
-                float xcalc = t2*t2*t2*a1.x  + 3*t2*t2*t*c1.x + 3*t2*t*t*c2.x  + t*t*t*a2.x;
-                float ycalc = t2*t2*t2*a1.y  + 3*t2*t2*t*c1.y + 3*t2*t*t*c2.y  + t*t*t*a2.y;
-                pA.ellipse(xcalc + ddx,ycalc+ddy,10,10);
+        pA.pushStyle();
+            pA.noStroke();
+            pA.fill(0,50);
+            if(np>1){
+                float step = 1.0f/(np-1);
+                for(float t=0.0f; t<=1.0f; t+=step){
+                    float t2=1.0f-t;
+                    float xcalc = t2*t2*t2*a1.x  + 3*t2*t2*t*c1.x + 3*t2*t*t*c2.x  + t*t*t*a2.x;
+                    float ycalc = t2*t2*t2*a1.y  + 3*t2*t2*t*c1.y + 3*t2*t*t*c2.y  + t*t*t*a2.y;
+                    pA.ellipse(xcalc + ddx,ycalc+ddy,10,10);
+                }
             }
-        }
+        pA.popStyle();
     }
 
     ArrayList<PVector> getPoints(int np){
@@ -117,17 +121,19 @@ public class BezierCurve {
     }
 
     void display(PApplet pA, int n, float ddx, float ddy) {
-        pA.noFill(); pA.stroke(0,100);
-        pA.ellipse(c1.x,c1.y,10,10);
-        pA.ellipse(c2.x,c2.y,10,10);
-        pA.stroke(255,0,0);
-        pA.beginShape();
-            pA.vertex(a1.x, a1.y);
-            pA.bezierVertex(c1.x, c1.y, c2.x, c2.y, a2.x, a2.y);
-        pA.endShape();
-        pA.stroke(0,100);
-        pA.line(a1.x, a1.y, c1.x, c1.y);
-        pA.line(a2.x, a2.y, c2.x, c2.y);
+        pA.pushStyle();
+            pA.noFill(); pA.stroke(0,100);
+            pA.ellipse(c1.x,c1.y,10,10);
+            pA.ellipse(c2.x,c2.y,10,10);
+            pA.stroke(255,0,0);
+            pA.beginShape();
+                pA.vertex(a1.x + ddx, a1.y + ddy);
+                pA.bezierVertex(c1.x + ddx, c1.y + ddy, c2.x + ddx, c2.y + ddy, a2.x + ddx, a2.y + ddy);
+            pA.endShape();
+            pA.stroke(0,100);
+            pA.line(a1.x, a1.y, c1.x, c1.y);
+            pA.line(a2.x, a2.y, c2.x, c2.y);
+        pA.popStyle();
 
         displayPoints(pA, n, ddx, ddy);
     }

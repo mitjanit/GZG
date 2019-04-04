@@ -190,13 +190,16 @@ public class ControlWindow extends PApplet {
                         createParticles(l, this);
                         break;
                     default:
-                        println("CREATE ???");
+                        println("CREATE WHAT ???");
                 }
                 //creatingPoints = false;
                 //oscGroup.clear();
             } else if (theControlEvent.isFrom("PREVIEW")) {
-                if(cCommons.preview) cCommons.bPreview.setLabel("PREVIEW ON");
-                else cCommons.bPreview.setLabel("PREVIEW OFF");
+                if(cCommons.preview){ cCommons.bPreview.setLabel("PREVIEW ON"); }
+                else {
+                    cCommons.bPreview.setLabel("PREVIEW OFF");
+                    cDefaults.resetBackground = true;
+                }
                 println("PREVIEW: "+cCommons.preview);
             }
         }
@@ -514,7 +517,7 @@ public class ControlWindow extends PApplet {
         float minD = cCircle.minDistance;
         PVector centre = cCircle.centre.copy();
         RangFloat maxR = cCircle.maxRadius.copy();
-        RangFloat randA = cCircle.angle.copy();
+        RangFloat randA = cCircle.randomAngle.copy();
         RangFloat dx = cRepeat.displaceX.copy();
         RangFloat dy = cRepeat.displaceY.copy();
         RangFloat dr = cRepeat.displaceR.copy();

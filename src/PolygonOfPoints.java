@@ -47,13 +47,14 @@ public class PolygonOfPoints extends SetOfPoints {
 
     public void setPoints(float minDistance){
 
-        float astep = (float)TWO_PI/this.numVertexs;
+        float astep = TWO_PI/(float)this.numVertexs;
         float a = this.randAngle.getRandomValue();
+        println("RAND ANGLE: "+a);
         float r = this.radiusMax.getRandomValue();
 
         int np=0;
 
-        for(int i=0; i<this.numVertexs; i++){
+        for(float i=0; i<this.numVertexs; i++){
 
             PVector p1 = new PVector (c.x + r*cos(a + i*astep) , c.y + r*sin(a + i*astep));
             PVector p2 = new PVector (c.x + r*cos(a + ((i+1)%numVertexs)*astep) , c.y + r*sin(a + ((i+1)%numVertexs)*astep));
