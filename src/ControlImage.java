@@ -175,9 +175,10 @@ public class ControlImage {
         }
         else {
             pathImage = selection.getAbsolutePath();
+            imageName = pathImage;
+            tImage.setValue(pathImage);
             println(pathImage);
         }
-        tImage.setValue(pathImage);
     }
 
 

@@ -4,6 +4,7 @@ import geomerative.RPoint;
 import geomerative.RShape;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PImage;
 import processing.core.PVector;
 import java.util.ArrayList;
 
@@ -28,7 +29,9 @@ public class Preview {
             case "whitney": previewWhitneyOfPoints(pA, cw); break;
             case "text": previewTextOfPoints(pA, cw); break;
             case "poisson": previewPoissonOfPoints(pA, cw); break;
+            case "image": previewImageOfPoints(pA, cw); break;
             case "particles": previewParticles(pA, cw); break;
+            default: println("PREVIEW WHAT??");
         }
     }
 
@@ -324,29 +327,31 @@ public class Preview {
     // Preview RING ************************************************************//
 
     public static void previewRingOfPoints(PApplet pA, ControlWindow cw){
-        //println("PREVIEW CIRCLE OF POINTS.");
+        println("PREVIEW CIRCLE OF POINTS.");
         int nt= cw.cRepeat.numTimes;
         PVector centre = cw.cCircle.centre;
         RangFloat dx = cw.cRepeat.displaceX;
         RangFloat dy = cw.cRepeat.displaceY;
         RangFloat dr = cw.cRepeat.displaceR;
         RangFloat da = cw.cRepeat.displaceA;
+
         for (int t=0; t<nt; t++) {
             PVector c = new PVector(centre.x + t*dx.getMaxValue(), centre.y + t*dy.getMaxValue());
             float r0 = cw.cCircle.rMinRadius.getHighValue() + t*dr.getMaxValue();
             float r1 = cw.cCircle.rMaxRadius.getHighValue() + t*dr.getMaxValue();
-            float aStep = cw.cCircle.rAngleStep.getHighValue()/100 + t*da.getMaxValue();
-            float rStep = cw.cCircle.rRadiusStep.getHighValue()/100 + t*dr.getMaxValue();
+            float aStep = cw.cCircle.rAngleStep.getHighValue() + t*da.getMaxValue();
+            float rStep = max(10, cw.cCircle.rRadiusStep.getHighValue())+ t*dr.getMaxValue();
+
             if (cw.cCircle.fibonacci) {
-                displayFibo(pA,c, r0, r1, aStep);
+                displayFibo(pA,c, r0, r1, aStep/100.0f);
                 if (cw.cRepeat.symmetryX && t>0) {
                     PVector cs = new PVector(centre.x - t*dx.getMaxValue(), centre.y + t*dy.getMaxValue());
-                    displayFibo(pA,cs, r0, r1, aStep);
+                    displayFibo(pA,cs, r0, r1, aStep/100.0f);
                 } else if (cw.cRepeat.symmetryY && t>0) {
                     PVector cs = new PVector(centre.x + t*dx.getMaxValue(), centre.y - t*dy.getMaxValue());
-                    displayFibo(pA, cs, r0, r1, aStep);
+                    displayFibo(pA, cs, r0, r1, aStep/100.0f);
                 }
-            } else {
+            } else if(true) {
                 displayRing(pA, cw, centre, r0, r1, rStep);
                 if (cw.cRepeat.symmetryX && t>0) {
                     PVector cs = new PVector(centre.x - t*dx.getMaxValue(), centre.y + t*dy.getMaxValue());
@@ -357,35 +362,49 @@ public class Preview {
                 }
             }
         }
+
     }
 
     public static void displayFibo(PApplet pA, PVector c, float r0, float r1, float aStep) {
-
-        float a = 0.0f;
-        for (float v=0.0f; v<1.0f; v+= aStep) {
-            float r = map(sqrt(v), 0, 1, r0, r1);
-            a += TWO_PI*((sqrt(5)-1)/2);
-            float x = c.x + r*cos(a);
-            float y = c.y + r*sin(a);
+        println("DISPLAY FIBO");
+        pA.pushStyle();
+            pA.noFill();
+            pA.stroke(0,50);
+            pA.strokeWeight(1);
+            pA.ellipse(c.x, c.y, 2*r0,2*r0);
+            pA.ellipse(c.x, c.y, 2*r1,2*r1);
             pA.fill(0);
             pA.noStroke();
-            pA.pushMatrix();
-                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 5, 5);
-            pA.popMatrix();
-        }
+            float a = 0.0f;
+            for (float v=0.0f; v<1.0f; v+= aStep) {
+                float r = map(sqrt(v), 0, 1, r0, r1);
+                a += TWO_PI*((sqrt(5)-1)/2);
+                float x = c.x + r*cos(a);
+                float y = c.y + r*sin(a);
+                println(x+", "+y);
+                pA.pushMatrix();
+                    //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 15, 15);
+                pA.popMatrix();
+            }
+        pA.popStyle();
     }
 
     public static void displayRing(PApplet pA, ControlWindow cw, PVector c, float r0, float r1, float rStep) {
 
+        println("DISPLAY RING");
         float a0 = cw.cCircle.rAngle.getLowValue();
         float a1 = cw.cCircle.rAngle.getHighValue();
+        //println("ANGLE: "+a0+", "+a1+"\t RADI: "+r0+", "+r1+" R STEP: "+rStep);
 
         for (float r = r0; r<r1; r+=rStep) {
 
-            float aStep = map(r, r0, r1, cw.cCircle.rAngleStep.getHighValue(), cw.cCircle.rAngleStep.getLowValue());
-            rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getHighValue(), cw.cCircle.rRadiusStep.getLowValue());
+            float ra = cw.cCircle.randomAngle.getMaxValue();   //.getRandomValue();
+            float aStep = map(r, max(0.1f, r0), r1, cw.cCircle.rAngleStep.getLowValue(), cw.cCircle.rAngleStep.getHighValue());
+            rStep = map(r, max(10,r0), r1, cw.cCircle.rRadiusStep.getLowValue(), cw.cCircle.rRadiusStep.getHighValue());
+            //println("rSTEP dins BUCLE: "+rStep+"    aSTEP dins BUCLE: "+aStep);
+            if(rStep<1) break;
 
             pA.pushStyle();
                 pA.noFill();
@@ -396,8 +415,8 @@ public class Preview {
                 pA.noStroke();
                 for (float a = a0; a < a1; a += aStep) {
                     float rf = r + rStep;
-                    float x = c.x + rf*cos(a);
-                    float y = c.y + rf*sin(a);
+                    float x = c.x + rf*cos(a + ra);
+                    float y = c.y + rf*sin(a + ra);
 
                     pA.pushMatrix();
                         //pA.translate(-screenWidth/2, -screenHeight/2, 0);
@@ -447,25 +466,33 @@ public class Preview {
         float rStep=rs;
         float aStep=as;
 
-        for (float r = r0, a=a0; r<r1 && a<a1; r+=rStep, a+=aStep) {
-            if (cw.cSpiral.invertRadius) {
-                rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getHighValue(), cw.cCircle.rRadiusStep.getLowValue());
-            } else {
-                rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getLowValue(), cw.cCircle.rRadiusStep.getHighValue());
+        pA.pushStyle();
+            pA.noFill();
+            pA.stroke(0,50);
+            pA.ellipse(c.x, c.y, 2*r0,2*r0);
+            pA.ellipse(c.x, c.y, 2*r1,2*r1);
+            pA.fill(0);
+            pA.noStroke();
+            for (float r = r0, a=a0; r<r1 && a<a1; r+=rStep, a+=aStep) {
+                if (cw.cSpiral.invertRadius) {
+                    rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getHighValue(), cw.cCircle.rRadiusStep.getLowValue());
+                } else {
+                    rStep = map(r, r0, r1, cw.cCircle.rRadiusStep.getLowValue(), cw.cCircle.rRadiusStep.getHighValue());
+                }
+                if (cw.cSpiral.invertAngle) {
+                    aStep = map(a, a0, a1, cw.cCircle.rAngleStep.getHighValue(), cw.cCircle.rAngleStep.getLowValue());
+                } else {
+                    aStep = map(a, a0, a1, cw.cCircle.rAngleStep.getLowValue(), cw.cCircle.rAngleStep.getHighValue());
+                }
+                float x = c.x + r*cos(a);
+                float y = c.y + r*sin(a);
+                pA.pushMatrix();
+                    //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 5, 5);
+                pA.popMatrix();
             }
-            if (cw.cSpiral.invertAngle) {
-                aStep = map(a, a0, a1, cw.cCircle.rAngleStep.getHighValue(), cw.cCircle.rAngleStep.getLowValue());
-            } else {
-                aStep = map(a, a0, a1, cw.cCircle.rAngleStep.getLowValue(), cw.cCircle.rAngleStep.getHighValue());
-            }
-            float x = c.x + r*cos(a);
-            float y = c.y + r*sin(a);
-            pA.pushMatrix();
-                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 5, 5);
-            pA.popMatrix();
-        }
+        pA.popStyle();
     }
 
     // Preview GRID *********************************************************//
@@ -566,7 +593,7 @@ public class Preview {
                 float y = map(x, p1.x, p2.x, p1.y, p2.y) + h*sin(a);
                 pA.pushMatrix();
                     //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                    pA.translate(x, y, 0);
+                    pA.translate(x, y);
                     pA.ellipse(0, 0, 5, 5);
                 pA.popMatrix();
                 a+= as;
@@ -604,7 +631,9 @@ public class Preview {
             float nn1 = cw.cFormula.sN1.getValue() + s0;
             float nn2 = cw.cFormula.sN2.getValue() + s0;
             float nn3 = cw.cFormula.sN3.getValue() + s0;
+
             newscaler = newscaler * cw.cFormula.sStepF.getValue();
+
             float sscaler = newscaler;
 
             PVector[] points = superformula(mm, nn1, nn2, nn3, cw.cCommons.numPoints);
@@ -612,36 +641,41 @@ public class Preview {
             for (int t=0; t<nt; t++) {
                 PVector c = new PVector(cw.cCircle.centre.x + t*dx.getMaxValue(), cw.cCircle.centre.y + t*dy.getMaxValue());
                 float sscaler0 = sscaler + t*dr.getMaxValue();
-                diplayFormula(pA, c, points, sscaler0);
+                displayFormula(pA, c, points, sscaler0);
 
                 if (cw.cRepeat.symmetryX && t>0) {
                     PVector cs = new PVector(cw.cCircle.centre.x - t*dx.getMaxValue(), cw.cCircle.centre.y + t*dy.getMaxValue());
-                    diplayFormula(pA, cs, points, sscaler0);
+                    displayFormula(pA, cs, points, sscaler0);
                 }
                 if (cw.cRepeat.symmetryY && t>0) {
                     PVector cs = new PVector(cw.cCircle.centre.x + t*dx.getMaxValue(), cw.cCircle.centre.y - t*dy.getMaxValue());
-                    diplayFormula(pA, cs, points, sscaler0);
+                    displayFormula(pA, cs, points, sscaler0);
                 }
                 if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
                     PVector cs = new PVector(cw.cCircle.centre.x - t*dx.getMaxValue(), cw.cCircle.centre.y - t*dy.getMaxValue());
-                    diplayFormula(pA, cs, points, sscaler0);
+                    displayFormula(pA, cs, points, sscaler0);
                 }
             }
         }
     }
 
-    public static void diplayFormula(PApplet pA, PVector c, PVector[] points, float sscaler) {
-        for (int i = 0; i < points.length; i++) {
-            float x = c.x + points[i].x*sscaler;
-            float y = c.y + points[i].y*sscaler;
+    public static void displayFormula(PApplet pA, PVector c, PVector[] points, float sscaler) {
+        pA.pushStyle();
             pA.fill(0);
             pA.noStroke();
-            pA.pushMatrix();
-                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 5, 5);
-            pA.popMatrix();
-        }
+            pA.beginShape();
+            for (int i = 0; i < points.length; i++) {
+                float x = c.x + points[i].x*sscaler;
+                float y = c.y + points[i].y*sscaler;
+                pA.vertex(x, y);
+                pA.pushMatrix();
+                    //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 5, 5);
+                pA.popMatrix();
+            }
+            pA.endShape();
+        pA.popStyle();
     }
 
     public static PVector[] superformula(float m, float n1, float n2, float n3, int numPoints) {
@@ -656,7 +690,7 @@ public class Preview {
     public static PVector superformulaPoint(float m, float n1, float n2, float n3, float phi) {
         float r, t1, t2;
         float a=1, b=1;
-        float x = 0, y = 0;
+        float x, y;
 
         t1 = cos(m * phi / 4) / a;
         t1 = abs(t1);
@@ -675,7 +709,6 @@ public class Preview {
             x = r * cos(phi);
             y = r * sin(phi);
         }
-
         return new PVector(x, y);
     }
 
@@ -709,24 +742,23 @@ public class Preview {
     public static void displayWhitney(PApplet pA, PVector c, int numP, float amp, float pha, float mag) {
 
         float spa = TWO_PI / numP;
-
+        pA.pushStyle();
         for (int i=0; i<numP; i++) {
             float x = c.x + sin(spa*amp*i)*(cos(spa*pha*i)*mag);
             float x2 = c.x + sin(spa*amp*(i+1))*(cos(spa*pha*(i+1))*mag);
             float y = c.y + sin(spa*pha*i)*(sin(spa*amp*i)*mag);
             float y2 = c.y + sin(spa*pha*(i+1))*(sin(spa*amp*(i+1))*mag);
-            pA.fill(0);
-            pA.noStroke();
+
             pA.pushMatrix();
                 //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                //translate(x, y, 0);
-                pA.fill(0, 255, 0);
-                pA.ellipse(x, y, 5, 5);
-                pA.stroke(0);
-                pA.strokeWeight(1);
+                //pA.translate(x, y);
+                pA.fill(0, 255, 0); pA.noStroke();
+                pA.ellipse(x, y, 15, 15);
+                pA.stroke(0); pA.strokeWeight(1);
                 pA.line(x, y, x2, y2);
             pA.popMatrix();
         }
+        pA.popStyle();
     }
 
 
@@ -778,15 +810,78 @@ public class Preview {
         RPoint[] pointsRG = grp.getPoints();
         int nPoints = pointsRG.length;
 
-        for (int i = 0; i < nPoints; i++) {
-            float x = pointsRG[i].x + c.x;
-            float y = pointsRG[i].y + c.y + fontSize/3;
-            pA.pushMatrix();
-                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
-                pA.translate(x, y, 0);
-                pA.ellipse(0, 0, 5, 5);
-            pA.popMatrix();
-        }
+        pA.pushStyle();
+            pA.noStroke();
+            pA.fill(0);
+            for (int i = 0; i < nPoints; i++) {
+                float x = pointsRG[i].x + c.x;
+                float y = pointsRG[i].y + c.y + fontSize/3;
+                pA.pushMatrix();
+                    //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2, 0);
+                    pA.translate(x, y);
+                    pA.ellipse(0, 0, 15, 15);
+                pA.popMatrix();
+            }
+        pA.popStyle();
+    }
+
+    // Preview IMAGE ***************************************************//
+
+    public static void previewImageOfPoints(PApplet pA, ControlWindow cw){
+        String imgName = cw.cImage.imageName;
+        println("IMG FILE: "+imgName);
+        displayImage(pA, imgName);
+
+        int nCols = cw.cGrid.numCols;
+        int nRows = cw.cGrid.numRows;
+        PVector c1 = cw.cLine.corner1;
+        PVector c2 = cw.cLine.corner2;
+        RangFloat bAttRange = cw.cImage.thresholdAtt.copy();
+        RangFloat bRepRange = cw.cImage.thresholdAtt.copy();
+        displayImageGrid(pA, imgName, nCols, nRows, c1, c2, bAttRange, bRepRange);
+    }
+
+    public static void displayImageGrid(PApplet pA, String imgName, int numCols, int numRows, PVector p1, PVector p2, RangFloat bAttRange, RangFloat bRepRange){
+
+        float wCol = floor((p2.x - p1.x)/(numCols-1));  //floor
+        float hRow = floor((p2.y - p1.y)/(numRows-1));
+
+        PImage img = pA.loadImage(imgName);
+        img.loadPixels();
+
+        pA.pushStyle();
+            pA.noStroke();
+
+            for(int col=0; col < numCols; col++){
+                for(int row=0; row<numRows; row++){
+
+                    float x = constrain(p1.x + wCol*col , 0, Defaults.screenWidth);
+                    float y = constrain(p1.y + hRow*row , 0, Defaults.screenHeight);
+                    PVector pos = new PVector(x, y);
+
+                    float x2 = map(col,0, numCols, 0, img.width);
+                    float y2 = map(row,0, numRows, 0, img.height);
+                    int loc = (int)x2 + (int)(y2*img.width);
+
+                    float b = pA.brightness(img.pixels[loc]);
+
+                    if(b>=bAttRange.getMinValue() && b<=bAttRange.getMaxValue()){
+                        pA.fill(0);
+                        pA.ellipse(x, y, 15, 15);
+                    }
+                    else if(b>=bRepRange.getMinValue() && b<=bRepRange.getMaxValue()){
+                        pA.fill(255);
+                        pA.ellipse(x, y, 15, 15);
+                    }
+                }
+            }
+        pA.popStyle();
+
+    }
+
+    public static void displayImage(PApplet pA, String imgName){
+        PImage img = pA.loadImage(imgName);
+        pA.image(img, 0, 0, Defaults.sceneWidth, Defaults.screenHeight);
     }
 
     // Preview POISSON *************************************************//

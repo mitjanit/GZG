@@ -23,6 +23,8 @@ public class ControlFormula {
                 .moveTo("formula")
         ;
 
+        m = Defaults.MIN_FORMULA_M;
+
         sN1 = cw.cp5.addSlider("N1")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*20)
                 .setSize(cw.rangeWidth,cw.controlHeight)
@@ -30,6 +32,8 @@ public class ControlFormula {
                 .setValue(Defaults.MIN_FORMULA_N1)
                 .moveTo("formula")
         ;
+
+        n1 = Defaults.MIN_FORMULA_N1;
 
         sN2 = cw.cp5.addSlider("N2")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*21)
@@ -39,6 +43,8 @@ public class ControlFormula {
                 .moveTo("formula")
         ;
 
+        n2 = Defaults.MIN_FORMULA_N2;
+
         sN3 = cw.cp5.addSlider("N3")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*22)
                 .setSize(cw.rangeWidth,cw.controlHeight)
@@ -46,6 +52,8 @@ public class ControlFormula {
                 .setValue(Defaults.MIN_FORMULA_N3)
                 .moveTo("formula")
         ;
+
+        n3 = Defaults.MIN_FORMULA_N3;
 
         sSizeF = cw.cp5.addSlider("SIZE F")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*23)
@@ -55,6 +63,8 @@ public class ControlFormula {
                 .moveTo("formula")
         ;
 
+        sizeF = Defaults.MIN_FORMULA_SIZE;
+
         sStepF = cw.cp5.addSlider("STEP F")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*24)
                 .setSize(cw.rangeWidth,cw.controlHeight)
@@ -63,6 +73,8 @@ public class ControlFormula {
                 .moveTo("formula")
         ;
 
+        stepF = Defaults.MIN_FORMULA_STEP;
+
         sLapsF = cw.cp5.addSlider("LAPS F")
                 .setPosition(cw.marginLeft,cw.marginTop + cw.rowStep*25)
                 .setSize(cw.rangeWidth,cw.controlHeight)
@@ -70,6 +82,8 @@ public class ControlFormula {
                 .setValue(Defaults.MIN_FORMULA_LAPS)
                 .moveTo("formula")
         ;
+
+        lapsF = Defaults.MIN_FORMULA_LAPS;
     }
 
     public void resetControls(){
@@ -89,6 +103,10 @@ public class ControlFormula {
         else if(theControlEvent.isFrom("N2")) {
             n2 = sN2.getValue();
             println("SUPERFORMULA N2: "+n2);
+        }
+        else if(theControlEvent.isFrom("N3")) {
+            n3 = sN3.getValue();
+            println("SUPERFORMULA N3: "+n3);
         }
 
         else if(theControlEvent.isFrom("SIZE F")) {

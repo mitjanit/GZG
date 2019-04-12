@@ -72,6 +72,7 @@ public class FormulaOfPoints extends SetOfPoints {
                 AttractorPoint ap = new AttractorPoint(pos, mass, spin, enabled, collapsable, np2c);
                 this.points.add(ap);
                 np++;
+                println("ADDED POINT TO FORMULA OF POINTS");
             }
         }
         deletePoints(minDistance);

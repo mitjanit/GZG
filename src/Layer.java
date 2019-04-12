@@ -802,8 +802,10 @@ public class Layer {
             FormulaOfPoints fop = new FormulaOfPoints(this.id, numPoints, style.enable, c);
             fop.setParamsFromStyle(style);
             fop.setScaleParams(sizeF, stepF);
+            println("SET sizeF: "+sizeF+", StepF:"+stepF);
             fop.setFormulaParams(n1, n2, n3, (int)m, (int)laps, numPoints);
-            fop.setPoints(minDistance);
+            println("SET n1: "+n1+", n2:"+n2+", n3:"+n3+", m:"+m+", laps:"+laps+" numPoints:"+numPoints);
+            fop.setPoints(minDistance);  // No funciona!!!
             //fop.setOscillators();
             lPoints.addAll(fop.points);
             lSets.add(fop);
