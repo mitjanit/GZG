@@ -168,8 +168,8 @@ class PoissonCircle {
 
                 pA.fill(0); pA.noStroke();
                 pA.pushMatrix();
-                pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2,0);
-                pA.translate(grid[i].x, grid[i].y,0);
+                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2,0);
+                pA.translate(grid[i].x, grid[i].y);
                 pA.ellipse(0,0, 5, 5);
                 pA.popMatrix();
             }

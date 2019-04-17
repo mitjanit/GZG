@@ -857,20 +857,19 @@ public class Preview {
 
                     float x = constrain(p1.x + wCol*col , 0, Defaults.screenWidth);
                     float y = constrain(p1.y + hRow*row , 0, Defaults.screenHeight);
-                    PVector pos = new PVector(x, y);
 
                     float x2 = map(col,0, numCols, 0, img.width);
                     float y2 = map(row,0, numRows, 0, img.height);
-                    int loc = (int)x2 + (int)(y2*img.width);
 
+                    int loc = (int)x2 + (int)(y2*img.width);
                     float b = pA.brightness(img.pixels[loc]);
 
                     if(b>=bAttRange.getMinValue() && b<=bAttRange.getMaxValue()){
-                        pA.fill(0);
+                        pA.fill(255, 0, 0);
                         pA.ellipse(x, y, 15, 15);
                     }
                     else if(b>=bRepRange.getMinValue() && b<=bRepRange.getMaxValue()){
-                        pA.fill(255);
+                        pA.fill(0, 0, 255);
                         pA.ellipse(x, y, 15, 15);
                     }
                 }
@@ -946,10 +945,14 @@ public class Preview {
                     }
                     break;
 
-                case 2: //println("PREVIEW POISSON POLYGON OF POINTS.");
+                case 2:
+                    println("PREVIEW POISSON POLYGON OF POINTS.");
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.closePolygon)&&(cw.cPoisson.pp!=null)) {
+                        println("A");
                         cw.cPoisson.pp.animatePoisson(25);
+                        println("B");
                         cw.cPoisson.pp.drawPoisson(pA);
+                        println("C");
                     } else {
                         displayPolygon(pA, cw, t*dx.getMaxValue(), t*dy.getMaxValue());
                         if (cw.cRepeat.symmetryX && t>0) {

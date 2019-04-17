@@ -20,10 +20,6 @@ public class ControlPoisson {
     ArrayList<PVector> corners;
     List poissonOptions = Arrays.asList("RECT", "CIRCLE", "POLYGON");
 
-    PVector centre, corner1, corner2; //VIUS repetits
-    RangFloat rMinRadius, rMaxRadius; //VIUS repetits
-
-
     public ControlPoisson(ControlWindow cw){
         setupPoissonControls(cw);
     }
@@ -169,19 +165,23 @@ public class ControlPoisson {
         else if(theControlEvent.isFrom("CREATE POISSON")) {
 
             switch(poissonOption){
-                case 0: //println("CREATE POISSON RECT");
-                    pr = new PoissonRect((int)sPoissonK.getValue(),(int)sPoissonDist.getValue(),corner1, corner2);
+                case 0:
+                    println("CREATE POISSON RECT");
+                    pr = new PoissonRect((int)sPoissonK.getValue(),(int)sPoissonDist.getValue(),cw.cLine.corner1, cw.cLine.corner2);
                     pr.startPoisson();
                     break;
 
-                case 1: //println("CREATE POISSON CIRCLE");
-                    pc = new PoissonCircle((int)sPoissonK.getValue(),(int)sPoissonDist.getValue(),centre, rMaxRadius.getMaxValue(), rMinRadius.getMaxValue());
-                    PVector startPoint = new PVector(centre.x + rMinRadius.getMaxValue() + (rMaxRadius.getMaxValue() - rMinRadius.getMaxValue())/2, centre.y);
+                case 1:
+                    println("CREATE POISSON CIRCLE");
+                    pc = new PoissonCircle((int)sPoissonK.getValue(),(int)sPoissonDist.getValue(),cw.cCircle.centre, cw.cCircle.maxRadius.getMaxValue(), cw.cCircle.minRadius.getMaxValue());
+                    PVector startPoint = new PVector(cw.cCircle.centre.x + cw.cCircle.minRadius.getMaxValue() + (cw.cCircle.maxRadius.getMaxValue() - cw.cCircle.minRadius.getMaxValue())/2, cw.cCircle.centre.y);
                     pc.startPoisson(startPoint);
                     break;
 
-                case 2: //println("CREATE POISSON POLYGON");
+                case 2:
+                    println("CREATE POISSON POLYGON");
                     closePolygon = true;
+                    println("CORNERS NUM: "+corners.size());
                     pp = new PoissonPolygon((int)sPoissonK.getValue(),(int)sPoissonDist.getValue(),corners);
                     pp.startPoisson(cw);
                     break;
@@ -190,7 +190,7 @@ public class ControlPoisson {
         }
         // SAVE VERTEX BUTTON
         else if(theControlEvent.isFrom("SAVE VERTEX")) {
-            PVector newVertex = centre.copy();
+            PVector newVertex = cw.cCircle.centre.copy();
             corners.add(newVertex);
             println("SAVE VERTEX ON "+newVertex);
         }
@@ -286,12 +286,22 @@ public class ControlPoisson {
                     cw.cp5.getController("SAME Y").moveTo("line");
                     cw.cp5.getController("MIN RADIUS").moveTo("circle");
                     cw.cp5.getController("MAX RADIUS").moveTo("circle");
-
                     break;
             }
             //cw.cp5.getController("POISSON DISTRIBUTION").bringToFront();
         }
 
+    }
+
+    void createVertexOn(PVector p){
+        corners.add(p.copy());
+    }
+
+    void createVertexOn(PVector p, float minDist){
+        int n = corners.size();
+        if(n>0 && p.dist(corners.get(n-1))>minDist) {
+            corners.add(p.copy());
+        }
     }
 
 }

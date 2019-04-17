@@ -334,7 +334,6 @@ public class ControlWindow extends PApplet {
                     cp5.getController("ROWS").moveTo(theControlEvent.getTab().getName());
                 }
             }
-
             if ((tabName == "text")) {
                 cp5.getController("WORD").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("FONT SIZE").moveTo(theControlEvent.getTab().getName());
@@ -347,7 +346,6 @@ public class ControlWindow extends PApplet {
                 cp5.getController("MIN DIST").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("MIN DIST").setPosition(marginLeft, marginTop + rowStep * 8);
             }
-
             if ((tabName == "formula")) {
                 cp5.getController("M").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("N1").moveTo(theControlEvent.getTab().getName());
@@ -367,7 +365,6 @@ public class ControlWindow extends PApplet {
 
 
             }
-
             if ((tabName == "whitney")) {
                 cp5.getController("W MAGNIFY").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("W PHASE").moveTo(theControlEvent.getTab().getName());
@@ -383,7 +380,6 @@ public class ControlWindow extends PApplet {
 
 
             }
-
             if (tabName == "poisson") {
                 cp5.getController("POISSON DISTRIBUTION").bringToFront();
                 cp5.getController("MIN DIST").moveTo(theControlEvent.getTab().getName());
@@ -399,7 +395,6 @@ public class ControlWindow extends PApplet {
                 cp5.getController("SAME X").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("SAME Y").moveTo(theControlEvent.getTab().getName());
             }
-
             if ((tabName == "bezier") || (tabName == "polyline") || (tabName == "dla")) {
                 cp5.getController("MIN DIST").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("MIN DIST").setPosition(marginLeft, marginTop + rowStep * 8);
@@ -410,7 +405,6 @@ public class ControlWindow extends PApplet {
                 cp5.getController("LOCK Y").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("ORIGIN").moveTo(theControlEvent.getTab().getName());
             }
-
             if ((tabName != "default") && (tabName != "particles")) {
                 cp5.getController("POISSON DISTRIBUTION").bringToFront();
                 cp5.getController("MAP NP COLLAPSE").bringToFront();
@@ -420,7 +414,6 @@ public class ControlWindow extends PApplet {
                 cp5.getController("REF COLOR").setPosition(marginLeft + rangeWidth + colStep / 4, marginTop + rowStep * 10);
                 cp5.getController("REF COLOR").setLabel("REF");
             }
-
             if (tabName == "polygon") {
                 cp5.getController("MIN DIST").moveTo(theControlEvent.getTab().getName());
                 cp5.getController("MIN DIST").setPosition(marginLeft, marginTop + rowStep * 8);
@@ -461,8 +454,8 @@ public class ControlWindow extends PApplet {
         cParticles.checkControlEvents(theControlEvent, this);
         cParticles.checkColorControlEvents(theControlEvent, this);
         cWave.checkControlEvents(theControlEvent);
-        cOscillation.checkControlEvents(theControlEvent);
-        cFlow.checkControlEvents(theControlEvent);
+        //cOscillation.checkControlEvents(theControlEvent);
+        //cFlow.checkControlEvents(theControlEvent);
         cMouse.checkControlEvents(theControlEvent);
     }
 

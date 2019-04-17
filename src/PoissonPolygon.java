@@ -23,8 +23,11 @@ class PoissonPolygon {
 
     boolean enabled = false;
 
+    int numPoissonPoints;
+
     PoissonPolygon(int k, int r, ArrayList<PVector> cs){
 
+        this.numPoissonPoints = 0;
         this.k = k; this.r = r;
         this.corners = new ArrayList<PVector>();
         for(PVector p : cs){
@@ -56,7 +59,6 @@ class PoissonPolygon {
     }
 
     public ArrayList<PVector> getPoints(){
-        println("POINTS: "+grid.length);
         ArrayList<PVector> ps = new ArrayList<PVector>();
         for(int i=0; i<grid.length; i++){
             if(grid[i]!=null){
@@ -65,6 +67,10 @@ class PoissonPolygon {
             }
         }
         return ps;
+    }
+
+    public int getNumPoints(){
+        return getPoints().size();
     }
 
 
@@ -194,8 +200,8 @@ class PoissonPolygon {
             if((grid[i]!=null)){
                 pA.fill(0); pA.noStroke();
                 pA.pushMatrix();
-                pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2,0);
-                pA.translate(grid[i].x, grid[i].y,0);
+                //pA.translate(-Defaults.screenWidth/2, -Defaults.screenHeight/2,0);
+                pA.translate(grid[i].x, grid[i].y);
                 pA.ellipse(0,0, 5, 5);
                 pA.popMatrix();
             }

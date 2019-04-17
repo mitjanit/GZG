@@ -171,10 +171,9 @@ public class Main extends PApplet {
             currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), Defaults.minDistance);
             controls.cDefaults.resetBackground = true;
         }
-        /*
-        else if(addVertexOnClick){
-            createVertexOnMouse();
-        }*/
+        else if(controls.cPoisson.addVertexOnClick){
+            controls.cPoisson.createVertexOn(new PVector(mouseX, mouseY));
+        }
         else if(controls.cBezier.addBezierOnClick){
             controls.cBezier.addBezier(new PVector(mouseX, mouseY));
         }
@@ -205,10 +204,9 @@ public class Main extends PApplet {
             currentLayer.deleteParticleOn(new PVector(mouseX, mouseY), controls.cCircle.minDistance);
             controls.cDefaults.resetBackground = true;
         }
-        /*
-        else if(addVertexOnDrag){
-            createVertexOnMouse();
-        }*/
+        else if(controls.cPoisson.addVertexOnDrag){
+            controls.cPoisson.createVertexOn(new PVector(mouseX, mouseY), controls.cCircle.minDistance);
+        }
         else if(controls.cBezier.editBezierOnDrag){
             controls.cBezier.editBezier(new PVector(mouseX, mouseY));
         }
