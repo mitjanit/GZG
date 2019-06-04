@@ -81,6 +81,10 @@ public class Main extends PApplet {
 
     public void draw(){
 
+        /*if(frameCount%30==0) {
+            frame.setTitle("Frames: " + frameCount + ", FPS: " + frameRate);
+        }*/
+
         switch(controls.cDefaults.blendOptions.get(controls.cDefaults.blendM).toString()){
             case "ADD": blendMode(ADD); break;
             case "SUBTRACT": blendMode(SUBTRACT); break;

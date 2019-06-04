@@ -640,32 +640,32 @@ public class ControlParticles {
         // RED IN
         if(theControlEvent.isFrom("RED IN")) {
             redIn.setValues(rRedIn.getLowValue(), rRedIn.getHighValue());
-            //println("RED IN : "+redIn);
+            println("RED IN : "+redIn);
         }
         // RED OUT
         else if(theControlEvent.isFrom("RED OUT")) {
             redOut.setValues(rRedOut.getLowValue(), rRedOut.getHighValue());
-            //println("RED OUT : "+redOut);
+            println("RED OUT : "+redOut);
         }
         // GREEN IN
         else if(theControlEvent.isFrom("GREEN IN")) {
             greenIn.setValues(rGreenIn.getLowValue(), rGreenIn.getHighValue());
-            //println("GREEN IN : "+greenIn);
+            println("GREEN IN : "+greenIn);
         }
         // GREEN OUT
         else if(theControlEvent.isFrom("GREEN OUT")) {
             greenOut.setValues(rGreenOut.getLowValue(), rGreenOut.getHighValue());
-            //println("GREEN OUT : "+greenOut);
+            println("GREEN OUT : "+greenOut);
         }
         // BLUE IN
         else if(theControlEvent.isFrom("BLUE IN")) {
             blueIn.setValues(rBlueIn.getLowValue(), rBlueIn.getHighValue());
-            //println("BLUE IN : "+blueIn);
+            println("BLUE IN : "+blueIn);
         }
         // BLUE OUT
         else if(theControlEvent.isFrom("BLUE OUT")) {
             blueOut.setValues(rBlueOut.getLowValue(), rBlueOut.getHighValue());
-            //println("BLUE OUT : "+blueOut);
+            println("BLUE OUT : "+blueOut);
         }
         // OPAC IN
         else if(theControlEvent.isFrom("OPAC IN")) {
@@ -675,7 +675,7 @@ public class ControlParticles {
         // OPAC OUT
         else if(theControlEvent.isFrom("OPAC OUT")) {
             opacOut.setValues(rOpacOut.getLowValue(), rOpacOut.getHighValue());
-            //println("OPAC OUT : "+opacOut);
+            println("OPAC OUT : "+opacOut);
         }
         // FADE IN SIZE
         else if(theControlEvent.isFrom("FADE IN SIZE")) {
@@ -685,22 +685,22 @@ public class ControlParticles {
         // WIDTH IN
         else if(theControlEvent.isFrom("WIDTH IN")) {
             widthIn.setValues(rWidthIn.getLowValue(), rWidthIn.getHighValue());
-            //println("WIDTH IN : "+widthIn);
+            println("WIDTH IN : "+widthIn);
         }
         // WIDTH OUT
         else if(theControlEvent.isFrom("WIDTH OUT")) {
             widthOut.setValues(rWidthOut.getLowValue(), rWidthOut.getHighValue());
-            //println("WIDTH OUT : "+widthOut);
+            println("WIDTH OUT : "+widthOut);
         }
         // HEIGHT IN
         else if(theControlEvent.isFrom("WIDTH IN")) {
             heightIn.setValues(rHeightIn.getLowValue(), rHeightIn.getHighValue());
-            //println("HEIGHT IN : "+heightIn);
+            println("HEIGHT IN : "+heightIn);
         }
         // HEIGHT OUT
         else if(theControlEvent.isFrom("WIDTH OUT")) {
             heightOut.setValues(rHeightOut.getLowValue(), rHeightOut.getHighValue());
-            //println("HEIGHT OUT : "+heightOut);
+            println("HEIGHT OUT : "+heightOut);
         }
         // GREYSCALE BUTTON
         else if(theControlEvent.isFrom("GREY SCALE")) {
@@ -712,7 +712,7 @@ public class ControlParticles {
         else if(theControlEvent.isFrom("EQUAL W&H")) {
             if(equalWidthAndHeight) bEqualWidthAndHeight.setLabel("EQUAL W&H");
             else bEqualWidthAndHeight.setLabel("DIFF W&H");
-            //println("Equal Width & Height: "+equalWidthAndHeight);
+            println("Equal Width & Height: "+equalWidthAndHeight);
         }
         // REF COLOR SLIDER 2D
         else if(theControlEvent.isFrom("REF COLOR") || theControlEvent.isFrom("REF")){
@@ -724,7 +724,7 @@ public class ControlParticles {
         // MAP RED MODE
         else if(theControlEvent.isFrom("MAP RED")) {
             mapRed = (int)slMapRed.getValue();
-            //println("Map Red: "+mapRed+" "+mapOptions.get(mapRed));
+            println("Map Red: "+mapRed+" "+mapOptions.get(mapRed));
             if(mapRed>=5 && mapRed<=8){ // RED MAPPED TO ORIENTATION X o Y
                 rRedIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);
@@ -749,7 +749,7 @@ public class ControlParticles {
         // MAP GREEN MODE
         else if(theControlEvent.isFrom("MAP GREEN")) {
             mapGreen = (int)slMapGreen.getValue();
-            //println("Map Green: "+mapGreen+" "+mapOptions.get(mapGreen));
+            println("Map Green: "+mapGreen+" "+mapOptions.get(mapGreen));
             if(mapGreen>=5 && mapGreen<=8){ // GREEN MAPPED TO ORIENTATION X o Y
                 rGreenIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);
@@ -774,7 +774,7 @@ public class ControlParticles {
         // MAP BLUE MODE
         else if(theControlEvent.isFrom("MAP BLUE")) {
             mapBlue = (int)slMapBlue.getValue();
-            //println("Map Blue: "+mapBlue+" "+mapOptions.get(mapBlue));
+            println("Map Blue: "+mapBlue+" "+mapOptions.get(mapBlue));
             if(mapBlue>=5 && mapBlue<=8){ // BLUE MAPPED TO ORIENTATION X o Y
                 rBlueIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);
@@ -799,7 +799,7 @@ public class ControlParticles {
         // MAP OPAC MODE
         else if(theControlEvent.isFrom("MAP OPAC")) {
             mapOpac = (int)slMapOpac.getValue();
-            //println("Map Opac: "+mapOpac+" "+mapOptions.get(mapOpac));
+            println("Map Opac: "+mapOpac+" "+mapOptions.get(mapOpac));
             if(mapOpac>=5 && mapOpac<=8){ // OPAC MAPPED TO ORIENTATION X o Y
                 rOpacIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);
@@ -824,7 +824,7 @@ public class ControlParticles {
         // MAP WIDTH MODE
         else if(theControlEvent.isFrom("MAP WIDTH")) {
             mapWidth = (int)slMapWidth.getValue();
-            //println("Map Width: "+mapWidth+" "+mapOptions.get(mapWidth));
+            println("Map Width: "+mapWidth+" "+mapOptions.get(mapWidth));
             if(mapWidth>=5 && mapWidth<=8){ // WIDTH MAPPED TO ORIENTATION X o Y
                 rWidthIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);
@@ -849,7 +849,7 @@ public class ControlParticles {
         // MAP HEIGHT MODE
         else if(theControlEvent.isFrom("MAP HEIGHT")) {
             mapHeight = (int)slMapHeight.getValue();
-            //println("Map Height: "+mapHeight+" "+mapOptions.get(mapHeight));
+            println("Map Height: "+mapHeight+" "+mapOptions.get(mapHeight));
             if(mapHeight>=5 && mapHeight<=8){ // HEIGHT MAPPED TO ORIENTATION X o Y
                 rHeightIn.setBroadcast(false).setRange(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT)
                         .setRangeValues(Defaults.MIN_ORIENT, Defaults.MAX_ORIENT).setBroadcast(true);

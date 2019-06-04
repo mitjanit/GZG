@@ -8,7 +8,6 @@ public
 class GridOfParticles extends SourceOfParticles {
 
     // Grid of Particles
-
     PVector c1, c2;
     float numCols, numRows;
 
@@ -44,28 +43,27 @@ class GridOfParticles extends SourceOfParticles {
 
         ArrayList<AttractedParticle> particles= new ArrayList<AttractedParticle>();
 
-        float wCol = (c2.x - c1.x)/(numCols-1);
-        float hRow = (c2.y - c1.y)/(numRows-1);
-
-        for(int r=0; r<numRows; r++){
-            for(int c=0; c < numCols; c++){
-                float xpos = c1.x + wCol*c + xVar.getRandomValue();
-                float ypos = c1.y + hRow*r + yVar.getRandomValue();
+        float xStep = (this.c2.x - this.c1.x)/this.numCols;
+        float yStep = (this.c2.y - this.c1.y)/this.numRows;
+        for(float x = c1.x; x<= c2.x; x+=xStep){
+            for(float y = c1.y; y<= c2.y; y+=yStep){
+                float xpos = x + xVar.getRandomValue();
+                float ypos = y + yVar.getRandomValue();
                 PVector position = new PVector(xpos, ypos);
                 AttractedParticle p = new AttractedParticle(position, pA.frameCount);
-                p.setStep(step.getRandomValue());
-                p.setDelay(delay.getRandomValue());
-                p.setRandXY(xRand, yRand);
-                if(greyScale){ p.setColorParams(mRed, rIn, rOut, mOpac, oIn, oOut); }
-                else { p.setColorParams(mRed, rIn, rOut, mGreen, gIn, gOut, mBlue, bIn, bOut, mOpac, oIn, oOut); }
-                if(equalWH){ p.setSizeParams(mWidth, wIn, wOut, mHeight, hIn,hOut); }
-                else { p.setSizeParams(mWidth, wIn,wOut);}
-                p.setColorRef(refColor);
-                p.setFadeInSize(fInSize);
+                p.setParamsFromSource(this);
                 particles.add(p);
             }
         }
         return particles;
+    }
+
+    @Override
+    public String toString(){
+        String txt ="C1: "+c1.x+", "+c1.y+" \n";
+        txt += "C2: "+c2.x+", "+c2.y+" \n";
+        txt += "NumCols: "+numCols+", NumRows: "+numRows+"\n";
+        return txt;
     }
 
 

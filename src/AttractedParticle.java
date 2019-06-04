@@ -11,7 +11,7 @@ public class AttractedParticle {
     // Propietats de moviment de la Partícula
     PVector position, prevPos, orientation;
     float distance, birth, step, delay;
-    RangFloat xR, yR;
+    RangFloat xR, yR, xV, yV;
     boolean goal;
 
     // Propietats de visualització (color, mida, fade) de la Particula.
@@ -58,6 +58,10 @@ public class AttractedParticle {
         this.xR = rx.copy(); this.yR = ry.copy();
     }
 
+    public void setVarXY(RangFloat rx, RangFloat ry){
+        this.xV = rx.copy(); this.yV = ry.copy();
+    }
+
     public float getAge(float frameCount){
         return (frameCount - birth);
     }
@@ -79,6 +83,7 @@ public class AttractedParticle {
         this.setStep(sop.step.getRandomValue());
         this.setDelay(sop.delay.getRandomValue());
         this.setRandXY(sop.xRand, sop.yRand);
+        this.setVarXY(sop.xVar, sop.yVar);
         if(sop.greyScale){ this.setColorParams(sop.mRed, sop.rIn, sop.rOut, sop.mOpac, sop.oIn, sop.oOut); }
         else { this.setColorParams(sop.mRed, sop.rIn, sop.rOut, sop.mGreen, sop.gIn, sop.gOut, sop.mBlue, sop.bIn, sop.bOut, sop.mOpac, sop.oIn, sop.oOut); }
         if(sop.equalWH){ this.setSizeParams(sop.mWidth, sop.wIn, sop.wOut, sop.mHeight, sop.hIn, sop.hOut); }
@@ -91,6 +96,7 @@ public class AttractedParticle {
         this.setStep(style.pStep.getRandomValue());
         this.setDelay(style.pDelay.getRandomValue());
         this.setRandXY(style.xRand, style.yRand);
+        this.setVarXY(style.xVar, style.yVar);
         if(style.grey){ this.setColorParams(style.mRed, style.rIn, style.rOut, style.mOpac, style.oIn, style.oOut); }
         else { this.setColorParams(style.mRed, style.rIn, style.rOut, style.mGreen, style.gIn, style.gOut, style.mBlue, style.bIn, style.bOut, style.mOpac, style.oIn, style.oOut); }
         if(style.equalWH){ this.setSizeParams(style.mWidth, style.wIn, style.wOut, style.mHeight, style.hIn, style.hOut); }
@@ -108,15 +114,15 @@ public class AttractedParticle {
         this.greyScale=false;
         this.refColor = new PVector(Defaults.screenWidth/2, Defaults.screenHeight/2);
 
-        this.mRed = 8;
+        this.mRed = 0;
         this.rIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.rOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
-        this.mGreen = 9;
+        this.mGreen = 0;
         this.gIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.gOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
-        this.mBlue = 10;
+        this.mBlue = 0;
         this.bIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.bOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
@@ -134,7 +140,8 @@ public class AttractedParticle {
         this.hIn = new RangFloat(Defaults.MIN_SIZE_IN, Defaults.MAX_SIZE_IN);
         this.hOut = new RangFloat(Defaults.MIN_SIZE_OUT, Defaults.MAX_SIZE_OUT);
 
-
+        this.xR = new RangFloat(0); this.yR = new RangFloat(0);
+        this.xV = new RangFloat(0); this.yV = new RangFloat(0);
     }
 
     public float distance(AttractedParticle p){

@@ -863,7 +863,7 @@ public class ControlFlow {
         }
 
         // VAR REF COLOR
-        else if(theControlEvent.isFrom("VAR REF")) {
+        else if(theControlEvent.isFrom("VAR REF COLOR")) {
             varRefColor = (int)slVarRefColor.getValue();
             println("VAR REF COLOR: "+varRefColor+" - "+varRefColorOptions.get(varRefColor));
         }
@@ -949,6 +949,11 @@ public class ControlFlow {
         else if(theControlEvent.isFrom("FLOW TIMES")) {
             flowTimes.setValues(rFlowTimes.getLowValue(), rFlowTimes.getHighValue());
             println("FLOW TIMES: "+flowTimes);
+        }
+        // REF STEP RANGE
+        else if(theControlEvent.isFrom("REF STEP")) {
+            refStep.setValues(rRefStep.getLowValue(), rRefStep.getHighValue());
+            println("REF STEP: "+refStep);
         }
     }
 

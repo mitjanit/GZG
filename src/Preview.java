@@ -903,24 +903,23 @@ public class Preview {
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.pr!=null)) {
                         cw.cPoisson.pr.animatePoisson(25);
                         cw.cPoisson.pr.drawPoisson(pA);
-                    } else {
-                        displayArea(pA,c1, c2);
+                    }
 
-                        if (cw.cRepeat.symmetryX  && t>0) {
+                    displayArea(pA,c1, c2);
+                    if (cw.cRepeat.symmetryX  && t>0) {
                             p1s = new PVector(cw.cLine.corner1.x - t*dx.getMaxValue(), cw.cLine.corner1.y + t*dy.getMaxValue());
                             p2s = new PVector(cw.cLine.corner2.x - t*dx.getMaxValue(), cw.cLine.corner2.y + t*dy.getMaxValue());
                             displayArea(pA,p1s, p2s, pA.color(255, 0, 0));
-                        }
-                        if (cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryY && t>0) {
                             p1s = new PVector(cw.cLine.corner1.x + t*dx.getMaxValue(), cw.cLine.corner1.y - t*dy.getMaxValue());
                             p2s = new PVector(cw.cLine.corner2.x + t*dx.getMaxValue(), cw.cLine.corner2.y - t*dy.getMaxValue());
                             displayArea(pA, p1s, p2s, pA.color(0, 255, 0));
-                        }
-                        if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
                             p1s = new PVector(cw.cLine.corner1.x - t*dx.getMaxValue(), cw.cLine.corner1.y - t*dy.getMaxValue());
                             p2s = new PVector(cw.cLine.corner2.x - t*dx.getMaxValue(), cw.cLine.corner2.y - t*dy.getMaxValue());
                             displayArea(pA, p1s, p2s, pA.color(0, 0, 255));
-                        }
                     }
                     break;
 
@@ -928,45 +927,39 @@ public class Preview {
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.pc!=null)) {
                         cw.cPoisson.pc.animatePoisson(25);
                         cw.cPoisson.pc.drawPoisson(pA);
-                    } else {
-                        displayCircle(pA, c, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue());
-                        if (cw.cRepeat.symmetryX && t>0) {
+                    }
+                    displayCircle(pA, c, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue());
+                    if (cw.cRepeat.symmetryX && t>0) {
                             PVector cs = new PVector(cw.cCircle.centre.x - t*dx.getMaxValue(), cw.cCircle.centre.y + t*dy.getMaxValue());
                             displayCircle(pA,cs, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue(), pA.color(255, 0, 0));
-                        }
-                        if (cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryY && t>0) {
                             PVector cs = new PVector(cw.cCircle.centre.x + t*dx.getMaxValue(), cw.cCircle.centre.y - t*dy.getMaxValue());
                             displayCircle(pA,cs, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue(), pA.color(0, 255, 0));
-                        }
-                        if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
                             PVector cs = new PVector(cw.cCircle.centre.x - t*dx.getMaxValue(), cw.cCircle.centre.y - t*dy.getMaxValue());
                             displayCircle(pA,cs, cw.cCircle.rMinRadius.getHighValue(), cw.cCircle.rMaxRadius.getHighValue(), pA.color(0, 0, 255));
-                        }
                     }
                     break;
 
                 case 2:
                     println("PREVIEW POISSON POLYGON OF POINTS.");
                     if ((cw.cPoisson.createPoisson)&&(cw.cPoisson.closePolygon)&&(cw.cPoisson.pp!=null)) {
-                        println("A");
                         cw.cPoisson.pp.animatePoisson(25);
-                        println("B");
                         cw.cPoisson.pp.drawPoisson(pA);
-                        println("C");
-                    } else {
-                        displayPolygon(pA, cw, t*dx.getMaxValue(), t*dy.getMaxValue());
-                        if (cw.cRepeat.symmetryX && t>0) {
+                    }
+                    displayPolygon(pA, cw, t*dx.getMaxValue(), t*dy.getMaxValue());
+                    if (cw.cRepeat.symmetryX && t>0) {
                             displayPolygon(pA, cw, -t*dx.getMaxValue(), t*dy.getMaxValue());
-                        }
-                        if (cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryY && t>0) {
                             displayPolygon(pA, cw, t*dx.getMaxValue(), -t*dy.getMaxValue());
-                        }
-                        if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
+                    }
+                    if (cw.cRepeat.symmetryX && cw.cRepeat.symmetryY && t>0) {
                             displayPolygon(pA, cw, -t*dx.getMaxValue(), -t*dy.getMaxValue());
-                        }
                     }
                     break;
-
             }
         }
     }

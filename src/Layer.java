@@ -58,17 +58,18 @@ public class Layer {
                 this.lParticles.addAll(sop.createParticles(pA));
                 sop.createdParticles = true;
             }
-            if(false) {//sop.createdParticles && sop.isFlowEnabled() && sop.areTimesToFlow() && sop.isFrameToFlow()){
+
+            if(sop.createdParticles && sop.isFrameToFlow(pA.frameCount) && sop.isFlowEnabled() && sop.areTimesToFlow() ){
 
                 println(pA.frameCount + ": CREATING NEW FLOW ("+sop.numTimesFlowed+")");
 
                 if(sop.isUpdate()){
 
-                    //println("UPDATE FLOW PARAMS");
+                    println("UPDATE FLOW PARAMS");
 
                     if(sop.isFlowRandom()){
 
-                        //println("RANDOM STYLE TO NEW FLOW");
+                        println("RANDOM STYLE TO NEW FLOW");
                         AttractedParticleStyle ns = new AttractedParticleStyle();
                         ns.randomStyle();
                         //ns.setGUI();
@@ -192,7 +193,7 @@ public class Layer {
     void createParticleOnMouse(PApplet pA, ControlWindow controls){
         PVector pos = new PVector(pA.mouseX, pA.mouseY);
         AttractedParticle p = new AttractedParticle(pos, pA.frameCount);
-        AttractedParticleStyle style = controls.createAttractedParticleStyleFromGUI();
+        AttractedParticleStyle style = AttractedParticleStyle.createAttractedParticleStyleFromGUI(controls);
         p.setParamsFromStyle(style);  // Falla estil o es transparent
         this.lParticles.add(p);
     }
@@ -227,7 +228,7 @@ public class Layer {
     void createGridOfParticles(PApplet pA, PVector corner1, PVector corner2, int numCols, int numRows, AttractedParticleStyle style){
         GridOfParticles gop = new GridOfParticles(corner1, corner2, numCols, numRows);
         gop.setParamsFromStyle(style);
-        // Flow Params
+        gop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(gop);
         this.lParticles.addAll(gop.createParticles(pA));

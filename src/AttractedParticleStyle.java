@@ -25,6 +25,16 @@ public class AttractedParticleStyle {
 
     int blendMode = 0;
 
+    // Valors de flow
+    boolean fEnabled, fUpdate, fRandom;
+    RangFloat fTimes, fFrames;
+
+    // Valors de Var Flow
+    int vRed, vGreen, vBlue, vOpac, vWidth, vHeight;
+    RangFloat vRedIn, vRedOut, vGreenIn, vGreenOut, vBlueIn, vBlueOut, vOpacIn, vOpacOut;
+    RangFloat vWidthIn, vWidthOut, vHeightIn, vHeightOut;
+
+
 
     public AttractedParticleStyle(){
         this.name = "NO NAME";
@@ -53,11 +63,21 @@ public class AttractedParticleStyle {
             style.setName(cw.cParticles.styleName);
             style.setStep(cw.cParticles.particleStep);
             style.setDelay(cw.cParticles.particleDelay);
+
             style.setVariability(cw.cLine.xVar, cw.cLine.yVar);
-            style.setRandomness(cw.cRandom.xRange, cw.cRandom.yRange);
+            style.setRandomness(new RangFloat(0, cw.cParticles.xRand), new RangFloat(0, cw.cParticles.yRand));
+
             style.setFadeInSize(cw.cParticles.fadeInSize);
             style.setColorParams(cw.cParticles.mapRed, cw.cParticles.redIn, cw.cParticles.redOut, cw.cParticles.mapGreen, cw.cParticles.greenIn, cw.cParticles.greenOut, cw.cParticles.mapBlue, cw.cParticles.blueIn, cw.cParticles.blueOut, cw.cParticles.mapOpac, cw.cParticles.opacIn, cw.cParticles.opacOut, cw.cParticles.refColor);
             style.setSizeParams(cw.cParticles.mapWidth, cw.cParticles.widthIn, cw.cParticles.widthOut, cw.cParticles.mapHeight, cw.cParticles.heightIn, cw.cParticles.heightOut);
+            style.setFlowParams(cw.cFlow.flowTimes, cw.cFlow.flowFrames, cw.cFlow.flowEnabled, cw.cFlow.flowUpdate, cw.cFlow.flowRandom);
+
+            style.setVarParams(cw.cFlow.varRed, cw.cFlow.varRedIn, cw.cFlow.varRedOut,
+                    cw.cFlow.varGreen, cw.cFlow.varGreenIn, cw.cFlow.varGreenOut,
+                    cw.cFlow.varBlue, cw.cFlow.varBlueIn, cw.cFlow.varBlueOut,
+                    cw.cFlow.varOpac, cw.cFlow.varOpacIn, cw.cFlow.varOpacOut,
+                    cw.cFlow.varWidth, cw.cFlow.varWidthIn, cw.cFlow.varWidthOut,
+                    cw.cFlow.varHeight, cw.cFlow.varHeightIn, cw.cFlow.varHeightOut);
             return style;
     }
 
@@ -252,6 +272,29 @@ public class AttractedParticleStyle {
         this.mWidth = mw; this.wIn = w0.copy(); this.wOut = w1.copy();
         this.mHeight = mw; this.hIn = w0.copy(); this.hOut = w1.copy();
         this.equalWH = true;
+    }
+
+    public void setFlowParams(RangFloat flowTimes, RangFloat flowFrames, boolean fEnabled, boolean fUpdate, boolean fRandom){
+        this.fTimes = flowTimes.copy();
+        println("FLOW TIMES:"+fTimes);
+        this.fFrames = flowFrames.copy();
+        this.fEnabled = fEnabled;
+        this.fUpdate = fUpdate;
+        this.fRandom = fRandom;
+    }
+
+    public void setVarParams(int vr, RangFloat vRin, RangFloat vRout,
+                             int vg, RangFloat vGin, RangFloat vGout,
+                             int vb, RangFloat vBin, RangFloat vBout,
+                             int vo, RangFloat vOin, RangFloat vOout,
+                             int vw, RangFloat vWin, RangFloat vWout,
+                             int vh, RangFloat vHin, RangFloat vHout){
+        this.vRed = vr;     this.vRedIn = vRin.copy();      this.vRedOut = vRout.copy();
+        this.vGreen = vg;   this.vGreenIn = vGin.copy();    this.vGreenOut = vGout.copy();
+        this.vBlue = vb;    this.vBlueIn = vBin.copy();     this.vBlueOut = vBout.copy();
+        this.vOpac = vo;    this.vOpacIn = vOin.copy();      this.vOpacOut = vOout.copy();
+        this.vWidth = vw;   this.vWidthIn = vWin.copy();      this.vWidthOut = vWout.copy();
+        this.vHeight = vh;  this.vHeightIn = vHin.copy();      this.vHeightOut = vHout.copy();
     }
 
 

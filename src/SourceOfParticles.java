@@ -43,6 +43,8 @@ public class SourceOfParticles {
         framesFlowing = 300; timesFlowing = 1; numTimesFlowed = 0;
 
         xRand=new RangFloat(0); yRand=new RangFloat(0);
+        xVar=new RangFloat(0); yVar=new RangFloat(0);
+        fFrames = new RangFloat(0); fTimes = new RangFloat(-1);
     }
 
     void setDefaults(){
@@ -54,15 +56,15 @@ public class SourceOfParticles {
         this.greyScale=false;
         this.refColor = new PVector(Defaults.screenWidth/2, Defaults.screenHeight/2);
 
-        this.mRed = 9;
+        this.mRed = 0;
         this.rIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.rOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
-        this.mGreen = 10;
+        this.mGreen = 0;
         this.gIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.gOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
-        this.mBlue = 1;
+        this.mBlue = 0;
         this.bIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
         this.bOut = new RangFloat(Defaults.MIN_COLOR_OUT, Defaults.MAX_COLOR_OUT);
 
@@ -84,9 +86,9 @@ public class SourceOfParticles {
 
     void setParamsFromStyle(AttractedParticleStyle style){
         // Basic Params
-        this.setStep(style.pStep);           //Range Particle STEP
-        this.setDelay(style.pDelay);         //Range Particle DELAY
-        this.setVariability(style.xVar, style.yVar);     //Ranges Variability X & Y Particle Position
+        this.setStep(style.pStep.copy());           //Range Particle STEP
+        this.setDelay(style.pDelay.copy());         //Range Particle DELAY
+        this.setVariability(style.xVar.copy(), style.yVar.copy());     //Ranges Variability X & Y Particle Position
         this.setRandXY(style.xRand, style.yRand);  //Range Particle X & Y Randomness from Original Position
 
         // Color & Size Params
@@ -94,7 +96,26 @@ public class SourceOfParticles {
         this.getSizeParamsFromStyle(style);  //Size Params from Style
         this.setFadeInSize(style.fInSize);   //Range Particle FadeInSize frames
 
-        this.setColorRef(style.refCol);      //Ref from Style
+        this.setColorRef(style.refCol.copy());      //Ref from Style
+    }
+
+    void setFlowParamsFromStyle(AttractedParticleStyle style){
+        this.fFrames = style.fFrames.copy();
+        this.fTimes = style.fTimes.copy();
+        this.timesFlowing = (int)fTimes.getRandomValue();
+        this.fEnabled = style.fEnabled;
+        this.fUpdate = style.fUpdate;
+        this.fRandom = style.fRandom;
+    }
+
+
+    void setVarParamsFromStyle(AttractedParticleStyle style){
+        setRedVarFlowParams(style.vRed, style.vRedIn, style.vRedOut);
+        setGreenVarFlowParams(style.vGreen, style.vGreenIn, style.vGreenOut);
+        setBlueVarFlowParams(style.vBlue, style.vBlueIn, style.vBlueOut);
+        setOpacVarFlowParams(style.vOpac, style.vOpacIn, style.vOpacOut);
+        setWidthVarFlowParams(style.vWidth, style.vWidthIn, style.vWidthOut);
+        setHeightVarFlowParams(style.vHeight, style.vHeightIn, style.vHeightOut);
     }
 
     public void setEnabled(boolean b){
@@ -110,6 +131,7 @@ public class SourceOfParticles {
     }
 
     public boolean isFlowEnabled(){
+        //println("FLOW ENABLED:"+fEnabled);
         return fEnabled;
     }
 
@@ -155,8 +177,8 @@ public class SourceOfParticles {
         this.framesFlowing = f;
     }
 
-    public void setFlowFramesNow(float frameCount){
-        this.framesFlowing = frameCount + fFrames.getRandomValue();
+    public void setFlowFramesNow(float framesNow){
+        this.framesFlowing = framesNow + (int)fFrames.getRandomValue();
     }
 
     public void setFlowTimes(float f){
@@ -169,17 +191,17 @@ public class SourceOfParticles {
 
     public void updateNumFlowTimes(){
         this.numTimesFlowed++;
-        //println("INCR. FLOWED TIMES: "+numTimesFlowed);
+        println("INCR. FLOWED TIMES: "+numTimesFlowed);
     }
 
-    public void setNextFlowTime(float frameCount){
-        this.framesFlowing = frameCount + fFrames.getRandomValue();
-        //println("NEXT TIME TO FLOW: "+framesFlowing);
+    public void setNextFlowTime(float framesNow){
+        this.framesFlowing = framesNow + fFrames.getRandomValue();
+        println("NEXT TIME TO FLOW: "+framesFlowing);
     }
 
-    public void setRangFlowFrames(RangFloat r, float frameCount){
+    public void setRangFlowFrames(RangFloat r, float framesNow){
         this.fFrames = r.copy();
-        this.framesFlowing = frameCount + this.fFrames.getRandomValue();
+        this.framesFlowing = framesNow + this.fFrames.getRandomValue();
     }
 
     public void setRangFlowTimes(RangFloat r){
@@ -265,6 +287,7 @@ public class SourceOfParticles {
         this.mHeight = mWidth; this.hIn = widthIn.copy(); this.hOut = widthOut.copy();
     }
 
+    // falta metode per passar-li al SoP tots els paràmetres de VAR FLOW
 
     public void setRedVarFlowParams(int v, RangFloat v0, RangFloat v1){
         this.vRed = v; this.rInVar = v0.copy(); this.rOutVar = v1.copy();
@@ -292,21 +315,23 @@ public class SourceOfParticles {
     }
 
     boolean areTimesToFlow(){
+        //println("TIMES FLOWING: "+timesFlowing+", TIMES FLOWED:"+numTimesFlowed);
         return fEnabled && ((timesFlowing==-1) || (numTimesFlowed<timesFlowing));
     }
 
-    boolean isFrameToFlow(float frameCount){
-        return fEnabled && (frameCount>=framesFlowing);
+    boolean isFrameToFlow(float framesNow){
+        //println("TIME TO NEXT FLOW: "+framesFlowing+", FRAMES NOW: "+framesNow);
+        return fEnabled && (framesNow>=framesFlowing);
     }
 
 
     public void updateVarParams(){
         updateRedVarParams();/*
-    updateGreenVarParams();
-    updateBlueVarParams();
-    updateOpacVarParams();
-    ipdateWidthVarParams();
-    updateHeightVarParams();*/
+        updateGreenVarParams();
+        updateBlueVarParams();
+        updateOpacVarParams();
+        updateWidthVarParams();
+        updateHeightVarParams();*/
     }
 
     public void updateRedVarParams(){
@@ -335,7 +360,7 @@ public class SourceOfParticles {
             default: txt += "RED VARIATION UNKNOWN ????"; break;
         }
 
-        //println(txt);
+        println(txt);
 
         // En funcio de mRed s'ha d'adaptar rInValid
         if(mRed>=5 && mRed<=8){ // RED MAPPED TO ORIENTATION X o Y
@@ -358,7 +383,7 @@ public class SourceOfParticles {
         rIn = rInf.copy();
         rOut = rOutf.copy();
 
-        //println("VARIATED RED IN: "+rIn+", OUT: "+rOut);
+        println("VARIATED RED IN: "+rIn+", OUT: "+rOut);
     }
 
     public void updateGreenVarParams(){
