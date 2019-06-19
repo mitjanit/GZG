@@ -46,7 +46,7 @@ class LineOfParticles extends SourceOfParticles {
 
         ArrayList<AttractedParticle> particles= new ArrayList<AttractedParticle>();
 
-        float amtStep = 1/numParticles;
+        float amtStep = 1.0f/numParticles;
         float wStep = 5.0f;
 
         for(float w=0.0f; w<lineWidth; w+=wStep){

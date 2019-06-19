@@ -1,12 +1,17 @@
 import controlP5.*;
+import processing.core.PApplet;
 import processing.core.PVector;
+import select.files.SelectLibrary;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static processing.core.PApplet.println;
+//import static processing.core.PApplet.*;
+import static processing.core.PApplet.*;
 import static processing.core.PConstants.CENTER;
+import static processing.core.PConstants.TAB;
 
 public class ControlParticles {
 
@@ -34,12 +39,19 @@ public class ControlParticles {
     Slider sNumVertexos;
     int numVertexos=3;
 
+    String pathFile, fileName;
+    SelectLibrary files;
+    File file;
+    ControlWindow cw;
+
     ArrayList<AttractedParticleStyle> pStyles;
 
 
 
     public ControlParticles(ControlWindow cw){
         setupParticleControls(cw);
+        this.cw = cw;
+        files = new SelectLibrary((PApplet)cw);
     }
 
     public void setupParticleControls(ControlWindow cw){
@@ -871,19 +883,25 @@ public class ControlParticles {
                 heightIn = new RangFloat(Defaults.MIN_COLOR_IN, Defaults.MAX_COLOR_IN);
             }
         }
+
+    }
+
+    public void checkStyleControlEvents(ControlEvent theControlEvent, ControlWindow cw){
         // PARTICLE STYLE
-        else if(theControlEvent.isFrom("PARTICLE STYLE")) {
+        if(theControlEvent.isFrom("PARTICLE STYLE")) {
             particleStyle = (int)slParticleStyle.getValue();
             println("PARTICLE STYLE: "+particleStyle+" "+pStyles.get(particleStyle).name);
         }
         // LOAD STYLE BUTTON
         else if(theControlEvent.isFrom("LOAD STYLE")) {
-            AttractedParticleStyle styleNow = pStyles.get(particleStyle);
+            println("LOADING STYLE");
+            //AttractedParticleStyle styleNow = pStyles.get(particleStyle);
             //styleNow.setGUI();  // Falta carregar l'estil
             //println("LOAD STYLE: "+particleStyle+" "+styleNow.name);
         }
         // SAVE STYLE BUTTON
         else if(theControlEvent.isFrom("SAVE STYLE")) {
+            println("SAVING STYLE");
             AttractedParticleStyle styleNow = AttractedParticleStyle.createAttractedParticleStyleFromGUI(cw);
             pStyles.add(styleNow);
             particleStyle = pStyles.size()-1;
@@ -897,6 +915,7 @@ public class ControlParticles {
         }
         // RANDOM STYLE BUTTON
         else if(theControlEvent.isFrom("RANDOM STYLE")) {
+            println("RANDOMIZING STYLE");
             AttractedParticleStyle styleNow = new AttractedParticleStyle();
             //styleNow.randomStyle();
             //styleNow.setGUI();  // Falta actualizar GUI amb dades estil
@@ -904,13 +923,57 @@ public class ControlParticles {
         }
         // EXPORT STYLES BUTTON
         else if(theControlEvent.isFrom("EXPORT STYLES")) {
-            //exportStyles();
+            println("EXPORTING STYLES.");
+            exportStyles();
             println("EXPORT STYLES.");
         }
         // IMPORT STYLES BUTTON
         else if(theControlEvent.isFrom("IMPORT STYLES")) {
-            //importStyles();
-            println("IMPORT STYLES.");
+            println("LOADING STYLES FILE!!! ");
+            this.cw.selectInput("Select Styles File:","selectStylesFileImport", file, this);
+            println("IMPORTED STYLES FROM FILE.");
         }
+    }
+
+    public void selectStylesFileImport(File selection){
+        if(selection==null){
+            pathStylesFile=Defaults.DEFAULT_STYLE_FILE_PATH;
+        }
+        else {
+            pathStylesFile = selection.getAbsolutePath();
+            // Remove styles form scrollableList
+            for(AttractedParticleStyle aps : pStyles){
+                String nameAPS = aps.name;
+                slParticleStyle.removeItem(nameAPS);
+            }
+            // Load styles from file
+            importStylesFromFile(pathStylesFile);
+            println("LOADED STYLES FROM FILE: "+pathStylesFile);
+        }
+    }
+
+    void importStylesFromFile(String fileName){
+        pStyles = new ArrayList<AttractedParticleStyle>();
+        ArrayList<String> lines = new ArrayList<String>();
+        try {
+            FileInputStream fis = new FileInputStream(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        for (int i = 0 ; i < lines.size(); i++) {
+            println(lines.get(i));
+            String[] pieces = split(lines.get(i), TAB);
+            AttractedParticleStyle newStyle = new AttractedParticleStyle();
+            newStyle = newStyle.getDataFromLine(pieces);
+            pStyles.add(newStyle);
+            slParticleStyle.addItem(newStyle.name, i);
+        }
+        slParticleStyle.setValue(0);
     }
 }

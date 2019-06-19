@@ -201,7 +201,7 @@ public class Layer {
     void createAreaOfParticles(PApplet pA, int numPs, float minDist, PVector corner1, PVector corner2, AttractedParticleStyle style){
         AreaOfParticles aop = new AreaOfParticles(corner1, corner2, numPs, minDist);
         aop.setParamsFromStyle(style);
-        // Flow Params
+        aop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(aop);
         this.lParticles.addAll(aop.createParticles(pA));
@@ -210,7 +210,7 @@ public class Layer {
     void createLineOfParticles(PApplet pA, int numPs, float frameWidth, PVector corner1, PVector corner2, AttractedParticleStyle style){
         LineOfParticles lop = new LineOfParticles(corner1, corner2, numPs, frameWidth);
         lop.setParamsFromStyle(style);
-        // Flow Params
+        lop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(lop);
         this.lParticles.addAll(lop.createParticles(pA));
@@ -219,7 +219,7 @@ public class Layer {
     void createFrameOfParticles(PApplet pA, PVector corner1, PVector corner2, int numCols, int numRows,float frameWidth, AttractedParticleStyle style){
         FrameOfParticles fop = new FrameOfParticles(corner1, corner2, numCols, numRows, frameWidth);
         fop.setParamsFromStyle(style);
-        // Flow Params
+        fop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(fop);
         this.lParticles.addAll(fop.createParticles(pA));
@@ -239,7 +239,7 @@ public class Layer {
                                RangFloat angle, RangFloat angleStep, RangFloat randomAngle, AttractedParticleStyle style){
         RingOfParticles rop = new RingOfParticles(centre, minRadius, maxRadius, radiusVariability, radiusStep, angle, angleStep, randomAngle);
         rop.setParamsFromStyle(style);
-        // Flow Params
+        rop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(rop);
         this.lParticles.addAll(rop.createParticles(pA));
@@ -251,7 +251,7 @@ public class Layer {
 
         PolygonOfParticles pop = new PolygonOfParticles(numVertexos, numPoints, frameWidth, centre, minRadius, maxRadius, radiusVariability, radiusStep, angle, angleStep, randomAngle);
         pop.setParamsFromStyle(style);
-        // Flow Params
+        pop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(pop);
         this.lParticles.addAll(pop.createParticles(pA));
@@ -262,7 +262,7 @@ public class Layer {
                                  RangFloat angle, RangFloat angleStep, RangFloat randomAngle, AttractedParticleStyle style){
         SpiralOfParticles pop = new SpiralOfParticles(centre, minRadius, maxRadius, radiusVariability, radiusStep, angle, angleStep, randomAngle);
         pop.setParamsFromStyle(style);
-        // Flow Params
+        pop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(pop);
         this.lParticles.addAll(pop.createParticles(pA));
@@ -274,7 +274,7 @@ public class Layer {
 
         WaveOfParticles wop = new WaveOfParticles(corner1, corner2, amplitud, ampAsc, xStep, angle, angleStep);
         wop.setParamsFromStyle(style);
-        // Flow Params
+        wop.setFlowParamsFromStyle(style);
         // Color & Size Variation Params
         this.lSources.add(wop);
         this.lParticles.addAll(wop.createParticles(pA));
