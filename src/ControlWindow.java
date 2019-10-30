@@ -31,6 +31,7 @@ public class ControlWindow extends PApplet {
     ControlText cText;
     ControlOscillation cOscillation;
     ControlPoisson cPoisson;
+    ControlDLA cDLA;
     ControlParticles cParticles;
     ControlRandom cRandom;
     ControlLine cLine;
@@ -95,6 +96,7 @@ public class ControlWindow extends PApplet {
         cText = new ControlText(this);
         cOscillation = new ControlOscillation(this);
         cPoisson = new ControlPoisson(this);
+        cDLA = new ControlDLA(this);
         cParticles = new ControlParticles(this);
         cRandom = new ControlRandom(this);
         cLine = new ControlLine(this);
@@ -122,6 +124,7 @@ public class ControlWindow extends PApplet {
         cText.resetControls();
         cOscillation.resetControls();
         cPoisson.resetControls();
+        cDLA.resetControls();
         cImage.resetControls();
         cParticles.resetControls();
         cWave.resetControls();
@@ -450,6 +453,7 @@ public class ControlWindow extends PApplet {
         cText.checkControlEvents(theControlEvent);
         cOscillation.checkControlEvents(theControlEvent);
         cPoisson.checkControlEvents(theControlEvent, this);
+        cDLA.checkControlEvents(theControlEvent, this);
         cImage.checkControlEvents(theControlEvent);
         cParticles.checkControlEvents(theControlEvent, this);
         cParticles.checkColorControlEvents(theControlEvent, this);
@@ -698,7 +702,18 @@ public class ControlWindow extends PApplet {
 
     public void createDLAOfPoints(Layer l) {
         println("CREATE DLA OF POINTS.");
-        //l.createDLAOfPoints(numTimes, displaceX, displaceY);
+        int nTimes = cRepeat.numTimes;
+        int nPoints = cCommons.numPoints;
+        float minD = cCircle.minDistance;
+        PVector c1 = cLine.corner1.copy();
+        PVector c2 = cLine.corner2.copy();
+        RangFloat xr = cRandom.xRange.copy();
+        RangFloat yr = cRandom.yRange.copy();
+        PVector c = cCircle.centre.copy();
+        RangFloat dx = cRepeat.displaceX.copy();
+        RangFloat dy = cRepeat.displaceY.copy();
+        SetOfPointsStyle style = createSetOfPointsStyleFromGUI();
+        l.createDLAOfPoints(nTimes, nPoints, c1, c2, c, minD, style, dx, dy);
     }
 
     public void createTextOfPoints(Layer l) {

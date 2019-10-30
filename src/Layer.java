@@ -970,7 +970,24 @@ public class Layer {
         }
     }
 
-    void createDLAOfPoints(int nt, RangFloat dx, RangFloat dy){
+    //nTimes, nPoints, c, minD, dx, dy);
+    void createDLAOfPoints(int numTimes, int numPoints,  PVector corner1, PVector corner2, PVector center, float minDistance,
+                           SetOfPointsStyle style,
+                           RangFloat dx, RangFloat dy){
+        for(int i=0; i<numTimes; i++) {
+             //(int l, int n, RangFloat x, RangFloat y, RangFloat mar, RangFloat mrr, RangFloat sar, boolean e, boolean c, RangFloat npcr, float rar, RangFloat xvar, RangFloat yvar){
+            //
+            DLAOfPoints dlaop = new DLAOfPoints(this.id, numPoints, true);
+            dlaop.setVertex1(corner1);
+            dlaop.setVertex2(corner2);
+            dlaop.setCentre(center);
+            dlaop.setParamsFromStyle(style);
+            dlaop.setDLAPoints(minDistance);
+            dlaop.setPoints(minDistance, dlaop.dlas, 0, 0);
+            //dlaop.setOscillators();
+            lPoints.addAll(dlaop.points);
+            lSets.add(dlaop);
+        }
     }
 
 

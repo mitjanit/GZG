@@ -27,6 +27,7 @@ public class Preview {
             case "wave": previewWaveOfPoints(pA, cw); break;
             case "formula": previewFormulaOfPoints(pA, cw); break;
             case "whitney": previewWhitneyOfPoints(pA, cw); break;
+            case "dla": previewDLAOfPoints(pA, cw); break;
             case "text": previewTextOfPoints(pA, cw); break;
             case "poisson": previewPoissonOfPoints(pA, cw); break;
             case "image": previewImageOfPoints(pA, cw); break;
@@ -710,6 +711,34 @@ public class Preview {
             y = r * sin(phi);
         }
         return new PVector(x, y);
+    }
+
+
+    // Preview DLA     *******************************************************//
+
+    public static void previewDLAOfPoints(PApplet pA, ControlWindow cw){
+        int nTimes = cw.cRepeat.numTimes;
+        int nPoints = cw.cCommons.numPoints;
+        float minD = cw.cCircle.minDistance;
+        PVector c1 = cw.cLine.corner1.copy();
+        PVector c2 = cw.cLine.corner2.copy();
+        PVector c = cw.cCircle.centre.copy();
+
+        if ((cw.cDLA.createDLA)&&(cw.cDLA.dlaRect!=null)) {
+            //cw.cDLA.dlaRect.animatePoisson(25);
+            cw.cPoisson.pr.drawPoisson(pA);
+        }
+
+        DLARect dlaRect = new DLARect(minD, nPoints,c1,c2,c);
+        dlaRect.setDLAPoints();
+        dlaRect.drawDLA(pA);
+        /*
+        ArrayList<PVector> pts = getDLAPoints(nPoints, c1, c2, c, minD);
+        for(PVector p : pts){
+            pA.stroke(0); pA.noFill();
+            pA.ellipse(p.x, p.y, 20, 20);
+        }*/
+
     }
 
     // Preview WHITNEY *******************************************************//
